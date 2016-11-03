@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% if title %}
+    <title>{{ title }} - CS 4400</title>
+    {% else %}
+    <title>Welcome to CS 4400 Project Website</title>
+    {% endif %}
+</head>
+<body>
+    <div>CS 4400 Project:
+        <a href={{url_for('index')}}>Home</a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Reddit</a>
+    </div>
+    <hr>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>>
