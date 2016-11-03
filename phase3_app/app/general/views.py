@@ -8,5 +8,5 @@ def index():
 
 @app.route('/reddit')
 def reddit():
-    return render_template()
+    return render_template('reddit.html', title='reddit', user='Admin')
 
