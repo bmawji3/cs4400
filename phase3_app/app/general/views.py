@@ -1,5 +1,5 @@
-from app import app
-from flask import render_template, redirect, flash
+from app import app, mysql
+from flask import render_template, redirect, flash, request
 from .forms import LoginForm, RegisterForm
 
 @app.route('/')
@@ -29,6 +29,19 @@ def register():
     else:
         flash_errors(form)
     return render_template('register.html', title='Register', form=form)
+
+@app.route("/temp")
+def temp():
+    username = request.args.get('UserName')
+    password = request.args.get('Password')
+    cursor = mysql.connect().cursor()
+    cursor.execute("SELECT * FROM user;")
+    data = cursor.fetchone()
+    print (data)
+    # if data is None:
+    #     return "Username or Password is wrong"
+    # else:
+    #     return "Logged in successfully"
 
 def flash_errors(form):
     for field, errors in form.errors.items():
