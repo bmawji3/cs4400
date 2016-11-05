@@ -17,6 +17,8 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         print('user: {} \npassword: {}'.format(form.username.data, form.password.data))
+    else:
+        flash_errors(form)
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -26,7 +28,7 @@ def register():
         print('user: {} \nemail: {} \npassword: {} \npassword_confirm: {}'.format(form.username.data, form.email.data, form.password.data, form.password_confirm.data))
     else:
         flash_errors(form)
-    return render_template('register.html', form=form)
+    return render_template('register.html', title='Register', form=form)
 
 def flash_errors(form):
     for field, errors in form.errors.items():
