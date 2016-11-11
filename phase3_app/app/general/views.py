@@ -1,5 +1,5 @@
 from app import app, mysql
-from flask import render_template, redirect, flash, request
+from flask import render_template, redirect, flash, request, url_for
 from .forms import LoginForm, RegisterForm
 
 cursor = mysql.connect().cursor()
@@ -24,6 +24,8 @@ def login():
         username = form.username.data
         password = form.password.data
         query = 'SELECT * FROM user WHERE username=\'{}\' AND password=\'{}\''.format(username, password)
+        if (query.find(';') or query.find('/')):
+            return redirect(url_for('jc'));
         cursor.execute(query)
         data = cursor.fetchone()
         if (data):
@@ -53,20 +55,9 @@ def register():
         flash_errors(form)
     return render_template('register.html', title='Register', form=form)
 
-# @app.route("/temp")
-# def temp():
-#     username = request.args.get('UserName')
-#     password = request.args.get('Password')
-#     cursor = mysql.connect().cursor()
-#     cursor.execute("SELECT * FROM user;")
-#     data = cursor.fetchall()
-#     print (data)
-#     print (cursor.fetchone())
-#     temp = []
-#     for item in data:
-#         temp.append(str(item))
-#     str1 = ', '.join(temp)
-#     return str1
+@app.route("/jc")
+def jc():
+    return render_template('jc.html', title='SQLi')
 
 def flash_errors(form):
     for field, errors in form.errors.items():
