@@ -1,14 +1,14 @@
--- DROP USER;
--- DROP project;
--- DROP project_requirements;
--- DROP department;
--- DROP major;
--- DROP designation;
--- DROP category;
--- DROP course;
--- DROP applies_for;
--- DROP course_category;
--- DROP project_category;
+drop table if exists user;
+drop table if exists project;
+drop table if exists project_requirements;
+drop table if exists department;
+drop table if exists major;
+drop table if exists designation;
+drop table if exists category;
+drop table if exists course;
+drop table if exists applies_for;
+drop table if exists course_category;
+drop table if exists project_category;
 
 CREATE TABLE user
 (
@@ -109,3 +109,15 @@ CREATE TABLE course_category
     FOREIGN KEY (courseNumber) REFERENCES course(courseNumber),
     FOREIGN KEY (categoryName) REFERENCES category(name)
 );
+
+ALTER TABLE `user` ENGINE = INNODB;
+ALTER TABLE `project` ENGINE = INNODB;
+ALTER TABLE `project_requirements` ENGINE = INNODB;
+ALTER TABLE `department` ENGINE = INNODB;
+ALTER TABLE `major` ENGINE = INNODB;
+ALTER TABLE `designation` ENGINE = INNODB;
+ALTER TABLE `category` ENGINE = INNODB;
+ALTER TABLE `course` ENGINE = INNODB;
+ALTER TABLE `applies_for` ENGINE = INNODB;
+ALTER TABLE `course_category` ENGINE = INNODB;
+ALTER TABLE `project_category` ENGINE = INNODB;
