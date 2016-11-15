@@ -24,7 +24,9 @@ def login():
         username = form.username.data
         password = form.password.data
         query = 'SELECT * FROM user WHERE username=\'{}\' AND password=\'{}\''.format(username, password)
-        if (query.find(';') or query.find('/')):
+        i = query.find(';')
+        j = query.find('/')
+        if (i != -1 or j != -1):
             return redirect(url_for('jc'));
         cursor.execute(query)
         data = cursor.fetchone()
