@@ -9,11 +9,6 @@ cursor = mysql.connect().cursor()
 def index():
     return render_template('index.html', title='Home', user="Admin")
 
-@app.route('/reddit')
-def reddit():
-    # return render_template('reddit.html', title='reddit', user='Admin')
-    return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -24,10 +19,6 @@ def login():
         username = form.username.data
         password = form.password.data
         query = 'SELECT * FROM user WHERE username=\'{}\' AND password=\'{}\''.format(username, password)
-        i = query.find(';')
-        j = query.find('/')
-        if (i != -1 or j != -1):
-            return redirect(url_for('jc'));
         cursor.execute(query)
         data = cursor.fetchone()
         if (data):
@@ -56,10 +47,6 @@ def register():
     else:
         flash_errors(form)
     return render_template('register.html', title='Register', form=form)
-
-@app.route("/jc")
-def jc():
-    return render_template('jc.html', title='SQLi')
 
 def flash_errors(form):
     for field, errors in form.errors.items():

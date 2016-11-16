@@ -15,9 +15,9 @@ CREATE TABLE user
     username    VARCHAR(60)     NOT NULL,
     password    VARCHAR(60)     NOT NULL,
     gtEmail     VARCHAR(60),
-    year        VARCHAR(60)    NOT NULL    DEFAULT "Freshman",
+    year        VARCHAR(60),
     majorName   VARCHAR(60),
-    userType    VARCHAR(10),
+    userType    VARCHAR(10)     NOT NULL    DEFAULT "Student",
     PRIMARY KEY (username),
     FOREIGN KEY (majorName)     REFERENCES major(majorName),
     UNIQUE (gtEmail)
@@ -65,7 +65,7 @@ CREATE TABLE designation
 
 CREATE TABLE category
 (
-    name        VARCHAR(60) NOT NULL,
+    name        VARCHAR(60)     NOT NULL,
     PRIMARY KEY (name)
 );
 
