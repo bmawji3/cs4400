@@ -1,6 +1,8 @@
 from app import app, mysql
-from flask import render_template, redirect, flash, request, url_for
+from flask import render_template, redirect, flash, request, url_for, session, g
+from flask_login import login_user, logout_user, current_user, login_required
 from .forms import LoginForm, RegisterForm
+from .models import User
 
 cursor = mysql.connect().cursor()
 
@@ -13,9 +15,6 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # print('user: {} \npassword: {}'.format(form.username.data, form.password.data))
-        # username = request.args.get('UserName')
-        # password = request.args.get('Password')
         username = form.username.data
         password = form.password.data
         query = 'SELECT * FROM user WHERE username=\'{}\' AND password=\'{}\''.format(username, password)
@@ -23,11 +22,14 @@ def login():
         data = cursor.fetchone()
         if (data):
             flash('Access Granted :)')
+            # user = User(username, password)
+            # login_user(user)
         else:
             flash('DENIED!!')
     else:
         flash_errors(form)
     return render_template('login.html', title='Login', form=form)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -47,6 +49,18 @@ def register():
     else:
         flash_errors(form)
     return render_template('register.html', title='Register', form=form)
+
+
+# @app.route('/logout', methods=['GET', 'POST'])
+# def logout():
+#     logout_user()
+#     return redirect(url_for('index'))
+
+
+# @app.before_request
+# def before_request():
+#     g.user = current_user
+
 
 def flash_errors(form):
     for field, errors in form.errors.items():
