@@ -9,9 +9,13 @@
 </head>
 <body>
     <div>CS 4400 Project:
-        <a href={{url_for('index')}}>Home</a>
         <a href={{url_for('login')}}>Login</a>
         <a href={{url_for('register')}}>Register</a>
+        <a href={{url_for('main_student')}}>Main Student</a>
+        <a href={{url_for('main_admin')}}>Main Admin</a>
+        {% if session.username %}
+            <a href="{{url_for('logout')}}">Logout</a>
+        {% endif %}
     </div>
     <hr>
     <!-- For flashing messages -->
