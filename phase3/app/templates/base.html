@@ -12,51 +12,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<!--     <div>CS 4400 Project:
-        <a href={{url_for('main_student')}}>Main Student</a>
-        <a href={{url_for('main_admin')}}>Main Admin</a>
-        {% if session.username %}
-            <a href="{{url_for('logout')}}">Logout</a>
-        {% endif %}
-    </div> -->
-<!-- <div>CS 4400 Project:
-  <div class="btn-group">
-    <a class="btn btn-link" type="button" href={{url_for('login')}}>Login</a>
-    <a class="btn btn-link" type="button" href={{url_for('register')}}>Register</a>
-
-    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">Student <span class="caret"></span></button>
-    <div class="dropdown-menu">
-      <a class="dropdown-item" href={{url_for('main_student')}}>Main</a>
-      <div class="dropdown-divider"></div>
-    </div>
-  </div>
-  <div class="btn-group">
-    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></button>
-    <div class="dropdown-menu">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="#">Something else here</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">Separated link</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Student <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <li><a href={{url_for('main_student')}}>Main</a></li>
-      </ul>
-  </div>
-  <div class="dropdown">
-    <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <li><a href={{url_for('main_admin')}}>Main</a></li>
-      </ul>
-  </div>
-  {% if session.username %}
-    <a class="btn btn-link" type="button" href={{url_for('logout')}}>Logout</a>
-  {% endif %}
-</div> -->
-    <!-- ********** BEGIN HEADER ********** -->
+    <!-- ********** BEGIN NAV-BAR ********** -->
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -65,29 +21,42 @@
         <ul class="nav navbar-nav">
           <li><a href={{url_for('login')}}>Login</a></li>
           <li><a href={{url_for('register')}}>Register</a></li>
-          <!-- Student -->
+          <!-- BEGIN STUDENT -->
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student
             <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href={{url_for('main_student')}}>Main</a></li>
+              <li><a href={{url_for('me_student')}}>Me</a></li>
+              <li><a href={{url_for('edit_student')}}>Edit Profile</a></li>
+              <li><a href={{url_for('my_application_student')}}>My Application</a></li>
+              <li><a href={{url_for('project_student')}}>View and Apply Project</a></li>
+              <li><a href={{url_for('course_student')}}>View Course</a></li>
             </ul>
           </li>
-          <!-- Admin -->
+          <!-- END STUDENT -->
+
+          <!-- BEGIN ADMIN -->
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
             <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="{{url_for('main_admin')}}">Main</a></li>
+              <li><a href="{{url_for('application_admin')}}">Application</a></li>
+              <li><a href="{{url_for('pop_proj_admin')}}">Popular Project</a></li>
+              <li><a href="{{url_for('application_report_admin')}}">Application Report</a></li>
+              <li><a href="{{url_for('add_project_admin')}}">Add Project</a></li>
+              <li><a href="{{url_for('add_course_admin')}}">Add Course</a></li>
             </ul>
           </li>
+          <!-- END ADMIN -->
           {% if session.username %}
           <li><a href={{url_for('logout')}}>Logout</a></li>
           {% endif %}
         </ul>
       </div>
     </nav>
-    <!-- ********** END HEADER ********** -->
+    <!-- ********** END NAV-BAR ********** -->
     <hr>
     <!-- For flashing messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}

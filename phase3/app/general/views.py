@@ -62,15 +62,193 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
+################# BEGIN STUDENT FUNCTIONS #################
 @app.route('/main-student', methods=['GET', 'POST'])
 def main_student():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Student':
+            flash('You are not a Student!')
+            return redirect(url_for('main_admin'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
     return render_template('student/main_student.html', title='Main')
 
 
+@app.route('/me-student', methods=['GET', 'POST'])
+def me_student():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Student':
+            flash('You are not a Student!')
+            return redirect(url_for('main_admin'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('student/me_student.html', title='Me')
+
+
+@app.route('/edit-student', methods=['GET', 'POST'])
+def edit_student():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Student':
+            flash('You are not a Student!')
+            return redirect(url_for('main_admin'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('student/edit_student.html', title='Edit Profile')
+
+
+@app.route('/my-application-student', methods=['GET', 'POST'])
+def my_application_student():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Student':
+            flash('You are not a Student!')
+            return redirect(url_for('main_admin'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('student/my_application_student.html', title='My Application')
+
+
+@app.route('/project-student', methods=['GET', 'POST'])
+def project_student():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Student':
+            flash('You are not a Student!')
+            return redirect(url_for('main_admin'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    project = 'Know Your Water'
+    return render_template('student/project_student.html', title='View and Apply Project', project=project)
+
+
+@app.route('/course-student', methods=['GET', 'POST'])
+def course_student():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Student':
+            flash('You are not a Student!')
+            return redirect(url_for('main_admin'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    course = 'CS/PSYC 3750'
+    return render_template('student/course_student.html', title='View Course', course=course)
+
+
+################# END STUDENT FUNCTIONS #################
+
+################# BEGIN ADMIN FUNCTIONS #################
 @app.route('/main-admin', methods=['GET', 'POST'])
 def main_admin():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Admin':
+            flash('You are not a Admin!')
+            return redirect(url_for('main_student'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
     return render_template('admin/main_admin.html', title='Choose Functionality')
 
+
+@app.route('/application-admin', methods=['GET', 'POST'])
+def application_admin():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Admin':
+            flash('You are not a Admin!')
+            return redirect(url_for('main_student'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('admin/application_admin.html', title='View Applications')
+
+
+@app.route('/pop-proj-admin', methods=['GET', 'POST'])
+def pop_proj_admin():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Admin':
+            flash('You are not a Admin!')
+            return redirect(url_for('main_student'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('admin/pop_proj_admin.html', title='View Popular Projects')
+
+
+@app.route('/application-report-admin', methods=['GET', 'POST'])
+def application_report_admin():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Admin':
+            flash('You are not a Admin!')
+            return redirect(url_for('main_student'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('admin/application_report_admin.html', title='View Application Report')
+
+
+@app.route('/add-project-admin', methods=['GET', 'POST'])
+def add_project_admin():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Admin':
+            flash('You are not a Admin!')
+            return redirect(url_for('main_student'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('admin/add_project_admin.html', title='Add Project')
+
+
+@app.route('/add-course-admin', methods=['GET', 'POST'])
+def add_course_admin():
+    # Check login & role -- DO NOT MODIFY
+    if 'username' in session:
+        if session.get('role') != 'Admin':
+            flash('You are not a Admin!')
+            return redirect(url_for('main_student'))
+    else:
+        flash('You are not logged in!')
+        return redirect(url_for('login'))
+    # Code after this comment
+
+    return render_template('admin/add_course_admin.html', title='Add Course')
+
+
+################# END ADMIN FUNCTIONS #################
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -83,7 +261,6 @@ def logout():
 # @app.before_request
 # def before_request():
 #     g.user = current_user
-
 
 def flash_errors(form):
     for field, errors in form.errors.items():
