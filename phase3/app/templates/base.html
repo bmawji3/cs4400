@@ -6,17 +6,88 @@
     {% else %}
     <title>Welcome to CS 4400 Project Website</title>
     {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div>CS 4400 Project:
-        <a href={{url_for('login')}}>Login</a>
-        <a href={{url_for('register')}}>Register</a>
+<!--     <div>CS 4400 Project:
         <a href={{url_for('main_student')}}>Main Student</a>
         <a href={{url_for('main_admin')}}>Main Admin</a>
         {% if session.username %}
             <a href="{{url_for('logout')}}">Logout</a>
         {% endif %}
+    </div> -->
+<!-- <div>CS 4400 Project:
+  <div class="btn-group">
+    <a class="btn btn-link" type="button" href={{url_for('login')}}>Login</a>
+    <a class="btn btn-link" type="button" href={{url_for('register')}}>Register</a>
+
+    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">Student <span class="caret"></span></button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href={{url_for('main_student')}}>Main</a>
+      <div class="dropdown-divider"></div>
     </div>
+  </div>
+  <div class="btn-group">
+    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#">Action</a>
+      <a class="dropdown-item" href="#">Another action</a>
+      <a class="dropdown-item" href="#">Something else here</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Separated link</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Student <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href={{url_for('main_student')}}>Main</a></li>
+      </ul>
+  </div>
+  <div class="dropdown">
+    <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href={{url_for('main_admin')}}>Main</a></li>
+      </ul>
+  </div>
+  {% if session.username %}
+    <a class="btn btn-link" type="button" href={{url_for('logout')}}>Logout</a>
+  {% endif %}
+</div> -->
+    <!-- ********** BEGIN HEADER ********** -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href={{url_for('login')}}>CS 4400 Project</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href={{url_for('login')}}>Login</a></li>
+          <li><a href={{url_for('register')}}>Register</a></li>
+          <!-- Student -->
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href={{url_for('main_student')}}>Main</a></li>
+            </ul>
+          </li>
+          <!-- Admin -->
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{{url_for('main_admin')}}">Main</a></li>
+            </ul>
+          </li>
+          {% if session.username %}
+          <li><a href={{url_for('logout')}}>Logout</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <!-- ********** END HEADER ********** -->
     <hr>
     <!-- For flashing messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}
