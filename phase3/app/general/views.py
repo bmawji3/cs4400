@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, CourseForm
 from .models import User
 
 conn = mysql.connect()
@@ -264,8 +264,27 @@ def add_course_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
-    return render_template('admin/add_course_admin.html', title='Add Course')
+    form = CourseForm()
+    # Queries to fill drop down
+    get_designation = 'SELECT name FROM designation;'
+    get_category = 'SELECT name FROM category;'
+    designation = []
+    category = []
+    # Setting the drop down values
+    cursor.execute(get_designation)
+    for item in cursor.fetchall():
+        designation.append((item[0], item[0]))
+    cursor.execute(get_category)
+    for item in cursor.fetchall():
+        category.append((item[0], item[0]))
+    form.designation.choices = designation
+    form.category.choices = category
+    # Adding the course
+    if form.validate_on_submit():
+        flash('you did it')
+    else:
+        flash_errors(form)
+    return render_template('admin/add_course_admin.html', title='Add Course', form=form)
 
 
 ################# END ADMIN FUNCTIONS #################
