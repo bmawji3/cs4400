@@ -27,7 +27,7 @@ CREATE TABLE project
 (
     name        VARCHAR(60)     NOT NULL,
     estNum      INT             NOT NULL,
-    description VARCHAR(140)    NOT NULL,
+    description VARCHAR(500)    NOT NULL,
     advfName    VARCHAR(60)     NOT NULL,
     advlName    VARCHAR(60)     NOT NULL,
     advEmail    VARCHAR(60)     NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE project_category
 
 CREATE TABLE course_category
 (
-    courseNumber    INT             NOT NULL,
+    courseNumber    VARCHAR(60)     NOT NULL,
     categoryName    VARCHAR(60)     NOT NULL,
     PRIMARY KEY (courseNumber, categoryName),
     FOREIGN KEY (courseNumber) REFERENCES course(courseNumber),
