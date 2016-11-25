@@ -268,20 +268,31 @@ def add_course_admin():
     # Queries to fill drop down
     get_designation = 'SELECT name FROM designation;'
     get_category = 'SELECT name FROM category;'
-    designation = []
-    category = []
+    designation_list = []
+    category_list = []
     # Setting the drop down values
     cursor.execute(get_designation)
     for item in cursor.fetchall():
-        designation.append((item[0], item[0]))
+        designation_list.append((item[0], item[0]))
     cursor.execute(get_category)
     for item in cursor.fetchall():
-        category.append((item[0], item[0]))
-    form.designation.choices = designation
-    form.category.choices = category
+        category_list.append((item[0], item[0]))
+    form.designation.choices = designation_list
+    form.category.choices = category_list
     # Adding the course
     if form.validate_on_submit():
-        flash('you did it')
+        cnum = form.courseNumber.data
+        cname = form.courseName.data
+        instructor = form.instructor.data
+        designation = form.designation.data
+        category = form.category.data
+        enum = form.estNum.data
+        # queries
+        check_cnum = 'SELECT courseNumber FROM course WHERE courseNumber=\'{}\''.format(cnum)
+        check_cname = 'SELECT name FROM course WHERE ame=\'{}\''.format(cname)
+        insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor, instructor, designation, enum)
+        insert_query_2 = ''
+
     else:
         flash_errors(form)
     return render_template('admin/add_course_admin.html', title='Add Course', form=form)
