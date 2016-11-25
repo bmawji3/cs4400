@@ -211,3 +211,35 @@ INSERT INTO project_category (projectName, categoryName) VALUES ('Thestral', 'co
 INSERT INTO project_category (projectName, categoryName) VALUES ('Hippogriff', 'computing for good');
 INSERT INTO project_category (projectName, categoryName) VALUES ('Owl', 'computing for good');
 INSERT INTO project_category (projectName, categoryName) VALUES ('Unicorn', 'computing for good');
+
+-- PROJECT REQUIREMENTS
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Excel Peer Support Network', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Excel Peer Support Network', 'senior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('ESW Hydroponics/Urban Farming Project', 'junior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Excel Current Events', 'COC students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Excel Current Events', 'senior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Shakespeare in Prison Project', 'College of Design students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Know Your Water Project', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Know Your Water Project', 'senior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Epic Intentions', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Acromantula', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Acromantula', 'senior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Basilisk', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Basilisk', 'junior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Centaur', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Centaur', 'senior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Dragon', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Dragon', 'senior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Ghoul', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Ghoul', 'junior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Leprechaun', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Leprechaun', 'junior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Merperson', 'CS students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Merperson', 'junior students only');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Three-headed Dog', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Toad', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Troll', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Thestral', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Hippogriff', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Owl', 'none');
+INSERT INTO project_requirements (pName, pRequirement) VALUES ('Unicorn', 'none');
