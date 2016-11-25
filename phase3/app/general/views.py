@@ -4,7 +4,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from .forms import LoginForm, RegisterForm
 from .models import User
 
-cursor = mysql.connect().cursor()
+conn = mysql.connect()
+cursor = conn.cursor()
 
 @app.route('/')
 def home():
@@ -45,20 +46,39 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    # if form.validate_on_submit():
-    #     # print('user: {} \nemail: {} \npassword: {} \npassword_confirm: {}'.format(form.username.data, form.email.data, form.password.data, form.password_confirm.data))
-    #     username = form.username.data
-    #     password = form.password.data
-    #     email = form.email.data
-    #     ''' TODO fix query for correct table '''
-    #     try:
-    #         query = 'INSERT INTO user (username, password) VALUES (\'{}\',  \'{}\')'.format(username, password)
-    #         cursor.execute(query)
-    #     except:
-    #         ''' TODO fix except clause for Integrity Error '''
-    #         flash('User already exists in DB!!')
-    # else:
-    #     flash_errors(form)
+    if form.validate_on_submit():
+        # data from form
+        username = form.username.data
+        password = form.password.data
+        email = form.email.data
+        # queries
+        check_email = 'SELECT gtEmail FROM user WHERE gtEmail=\'{}\''.format(email)
+        check_user = 'SELECT username FROM user WHERE username=\'{}\''.format(username)
+        insert_query = 'INSERT INTO user (username, password, gtEmail) VALUES (\'{}\', \'{}\', \'{}\')'.format(username, password, email)
+        loc = email.find('@gatech.edu')
+        if loc == -1:
+            flash('You must have an email address ending in \'@gatech.edu\'')
+            return redirect(url_for('register'))
+        # already checked '@gatech.edu'
+        # now checking unique email
+        check_em_result = cursor.execute(check_email)
+        if not check_em_result:
+            flash('Your email is unique!')
+            # now checking unique username
+            check_us_result = cursor.execute(check_user)
+            if not check_us_result:
+                flash('Your username is unique!')
+                # enter info into db
+                cursor.execute(insert_query)
+                conn.commit()
+                flash('Your info has been entered into the database!')
+                return redirect(url_for('login'))
+            else:
+                flash('This username already exists in the database')
+        else:
+            flash('This email already exists in the database!')
+    else:
+        flash_errors(form)
     return render_template('register.html', title='Register', form=form)
 
 
