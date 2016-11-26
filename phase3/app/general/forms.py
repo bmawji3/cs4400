@@ -15,7 +15,8 @@ class RegisterForm(FlaskForm):
 class CourseForm(FlaskForm):
     courseNumber = StringField('Course Number', [InputRequired()])
     courseName = StringField('Course Name', [InputRequired()])
-    instructor = StringField('Instructor', [InputRequired()])
+    instructor_f = StringField('Instructor First Name', [InputRequired()])
+    instructor_l = StringField('Instructor Last Name', [InputRequired()])
     designation = SelectField('Designation')
     category = SelectField('Category')
     estNum = IntegerField('Estimated # of students', [InputRequired()])

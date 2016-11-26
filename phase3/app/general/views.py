@@ -283,14 +283,16 @@ def add_course_admin():
     if form.validate_on_submit():
         cnum = form.courseNumber.data
         cname = form.courseName.data
-        instructor = form.instructor.data
+        instructor_f = form.instructor_f.data
+        instructor_l = form.instructor_l.data
         designation = form.designation.data
         category = form.category.data
         enum = form.estNum.data
         # queries
         check_cnum = 'SELECT courseNumber FROM course WHERE courseNumber=\'{}\''.format(cnum)
         check_cname = 'SELECT name FROM course WHERE ame=\'{}\''.format(cname)
-        insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor, instructor, designation, enum)
+        insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+        print (insert_query)
         insert_query_2 = ''
 
     else:
