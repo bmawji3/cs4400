@@ -48,6 +48,15 @@ def register():
         flash_errors(form)
     return render_template('register.html', title='Register', form=form)
 
+@app.route('/application_report', methods=['GET', 'POST'])
+def view_applications():
+    #try:
+    #    query = 'SELECT' 
+    #except:
+    #    ''' TODO fix except clause for Integrity Error '''
+    #    flash('User already exists in DB!!')
+    return render_template('application_report.html', title='Application Report')
+
 def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
