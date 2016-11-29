@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm
 from .models import User
 
 conn = mysql.connect()
@@ -124,8 +124,35 @@ def edit_student():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
+    form = EditProfileForm()
+    # Queries to fill drop down
+    get_majors = 'SELECT majorName FROM major;'
+    major_list = []
+    dept = ''
+    year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
+    # Setting the drop down values
+    cursor.execute(get_majors)
+    for item in cursor.fetchall():
+        major_list.append((item[0], item[0]))
+    form.new_major.choices = major_list
+    form.new_year.choices = year_list
+    # Editing the profile
+    if form.validate_on_submit():
+        major = form.new_major.data
+        year = form.new_year.data
+        get_department = 'SELECT deptName from major where majorName = \'{}\''.format(major)
+        cursor.execute(get_department)
+        dept = cursor.fetchall()[0][0]
+        print(dept[0][0])
+        # queries
+        update_query = 'UPDATE user SET majorName = \'{}\', year = \'{}\' WHERE username = \'{}\''.format(major, year, session.get('username'))
+        print(update_query)
+        cursor.execute(update_query)
+        conn.commit()
+    else:
+        flash_errors(form)
 
-    return render_template('student/edit_student.html', title='Edit Profile')
+    return render_template('student/edit_student.html', title='Edit Profile', form=form, dept=dept)
 
 
 @app.route('/my-application-student', methods=['GET', 'POST'])

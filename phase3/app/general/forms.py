@@ -21,3 +21,6 @@ class CourseForm(FlaskForm):
     category = SelectField('Category')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 
+class EditProfileForm(FlaskForm):
+    new_major = SelectField('Major')
+    new_year = SelectField('Year')
