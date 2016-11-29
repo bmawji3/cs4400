@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Edit Profile</h1>
-    <button onclick="window.location.href='{{url_for('me_student')}}'">Back</button>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
         <p>
@@ -18,5 +17,5 @@
             </b>
         <p><input type="submit" value="Submit"></p>
     </form>
-    <button onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
+    <button onclick="window.location.href='{{url_for('me_student')}}'">Back</button>
 {% endblock %}
