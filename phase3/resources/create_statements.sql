@@ -27,8 +27,9 @@ CREATE TABLE project
 (
     name        VARCHAR(60)     NOT NULL,
     estNum      INT             NOT NULL,
-    description VARCHAR(140)    NOT NULL,
-    advName     VARCHAR(60)     NOT NULL,
+    description VARCHAR(500)    NOT NULL,
+    advfName    VARCHAR(60)     NOT NULL,
+    advlName    VARCHAR(60)     NOT NULL,
     advEmail    VARCHAR(60)     NOT NULL,
     desigName   VARCHAR(60),
     PRIMARY KEY (name),
@@ -73,7 +74,8 @@ CREATE TABLE course
 (
     courseNumber        VARCHAR(60)     NOT NULL,
     name                VARCHAR(60)     NOT NULL,
-    instructor          VARCHAR(60)     NOT NULL,
+    instructorfName     VARCHAR(60)     NOT NULL,
+    instructorlName     VARCHAR(60)     NOT NULL,
     designation         VARCHAR(60)     NOT NULL,
     estNumberStudents   INT             NOT NULL,
     PRIMARY KEY (courseNumber),
@@ -103,7 +105,7 @@ CREATE TABLE project_category
 
 CREATE TABLE course_category
 (
-    courseNumber    INT             NOT NULL,
+    courseNumber    VARCHAR(60)     NOT NULL,
     categoryName    VARCHAR(60)     NOT NULL,
     PRIMARY KEY (courseNumber, categoryName),
     FOREIGN KEY (courseNumber) REFERENCES course(courseNumber),

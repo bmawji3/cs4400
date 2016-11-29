@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Add a Course</h1>
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.courseNumber.label }}:<br>
+            {{ form.courseNumber(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.courseName.label }}:<br>
+            {{ form.courseName(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.instructor_f.label }}:<br>
+            {{ form.instructor_f(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.instructor_l.label }}:<br>
+            {{ form.instructor_l(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.designation.label }}:<br>
+            {{ form.designation() }}<br>
+        </p>
+        <p>
+            {{ form.category.label }}:<br>
+            {{ form.category() }}<br>
+        </p>
+        <p>
+            {{ form.estNum.label }}:<br>
+            {{ form.estNum(size=40) }}<br>
+        </p>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+    <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
+{% endblock %}

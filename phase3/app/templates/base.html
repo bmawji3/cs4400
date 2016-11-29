@@ -6,13 +6,57 @@
     {% else %}
     <title>Welcome to CS 4400 Project Website</title>
     {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div>CS 4400 Project:
-        <a href={{url_for('index')}}>Home</a>
-        <a href={{url_for('login')}}>Login</a>
-        <a href={{url_for('register')}}>Register</a>
-    </div>
+    <!-- ********** BEGIN NAV-BAR ********** -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href={{url_for('login')}}>CS 4400 Project</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href={{url_for('login')}}>Login</a></li>
+          <li><a href={{url_for('register')}}>Register</a></li>
+          <!-- BEGIN STUDENT -->
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href={{url_for('main_student')}}>Main</a></li>
+              <li><a href={{url_for('me_student')}}>Me</a></li>
+              <li><a href={{url_for('edit_student')}}>Edit Profile</a></li>
+              <li><a href={{url_for('my_application_student')}}>My Application</a></li>
+              <li><a href={{url_for('project_student')}}>View and Apply Project</a></li>
+              <li><a href={{url_for('course_student')}}>View Course</a></li>
+            </ul>
+          </li>
+          <!-- END STUDENT -->
+
+          <!-- BEGIN ADMIN -->
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{{url_for('main_admin')}}">Main</a></li>
+              <li><a href="{{url_for('application_admin')}}">Application</a></li>
+              <li><a href="{{url_for('pop_proj_admin')}}">Popular Project</a></li>
+              <li><a href="{{url_for('application_report_admin')}}">Application Report</a></li>
+              <li><a href="{{url_for('add_project_admin')}}">Add Project</a></li>
+              <li><a href="{{url_for('add_course_admin')}}">Add Course</a></li>
+            </ul>
+          </li>
+          <!-- END ADMIN -->
+          {% if session.username %}
+          <li><a href={{url_for('logout')}}>Logout</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <!-- ********** END NAV-BAR ********** -->
     <hr>
     <!-- For flashing messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}

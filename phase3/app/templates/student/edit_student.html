@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Edit Profile</h1>
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.new_major.label }}:<br>
+            {{ form.new_major() }}<br>
+        </p>
+        <p>
+            {{ form.new_year.label }}:<br>
+            {{ form.new_year() }}<br>
+        </p>
+        <p>
+            <b>
+                Department (new department shown after new major is submitted): {{dept}}
+            </b>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+    <button onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
+{% endblock %}
