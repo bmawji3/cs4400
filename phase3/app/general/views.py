@@ -148,7 +148,7 @@ def edit_student():
         update_query = 'UPDATE user SET majorName = \'{}\', year = \'{}\' WHERE username = \'{}\''.format(major, year, session.get('username'))
         print(update_query)
         cursor.execute(update_query)
-
+        conn.commit()
     else:
         flash_errors(form)
 
