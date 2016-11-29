@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Choose Functionality</h1>
-    <a href="#">View Applications</a><br>
-    <a href="#">View popular project report</a><br>
-    <a href="#">View Application report</a><br>
-    <a href="#">Add a Project</a><br>
+    <a href="{{url_for('application_admin')}}">View Applications</a><br>
+    <a href="{{url_for('pop_proj_admin')}}">View popular project report</a><br>
+    <a href="{{url_for('application_report_admin')}}">View Application report</a><br>
+    <a href="{{url_for('add_project_admin')}}">Add a Project</a><br>
     <a href="{{url_for('add_course_admin')}}">Add a Course</a><br>
 {% endblock %}
