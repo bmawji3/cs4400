@@ -1,40 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<!--     <script type="text/javascript">
-        var categories = [];
-        function getCategories() {
-            var objPush = {};
-            objPush.value = "jquery";
-            objPush.label = "jQuery";
-            objPush.desc = "the write less, do more, JavaScript library";
-            // var elems = document.getElementsByClassName('category');
-            // console.log(elems);
-            // var arr = jQuery.makeArray(elems);
-            categories.push(objPush);
-            alert(categories);
-        }
+    <script type="text/javascript">
+        // var categories = [];
+        // function getCategories() {
+        //     var objPush = {};
+        //     objPush.value = "jquery";
+        //     objPush.label = "jQuery";
+        //     objPush.desc = "the write less, do more, JavaScript library";
+        //     // var elems = document.getElementsByClassName('category');
+        //     // console.log(elems);
+        //     // var arr = jQuery.makeArray(elems);
+        //     categories.push(objPush);
+        //     alert(categories);
+        // }
 
-        $(document).ready(function() {
-            var max_fields      = 9; //maximum input boxes allowed
-            var wrapper         = $(".cat_list"); //Fields wrapper
-            var add_button      = $(".btn"); //Add button ID
-            var e2 = document.getElementById('category');
+        // $(document).ready(function() {
+        //     var max_fields      = 9; //maximum input boxes allowed
+        //     var wrapper         = $(".cat_list"); //Fields wrapper
+        //     var add_button      = $(".btn"); //Add button ID
+        //     var e2 = document.getElementById('category');
 
-            var x = 0; //initlal text box count
-            $(add_button).click(function(e){ //on add input button click
-                e.preventDefault();
-                if(x < max_fields){ //max input box allowed
-                    x++; //text box increment
-                    $(wrapper).append('<div id="' + e2.value + '" class="category">' + e2.value + '</div>'); //add input box
-                    // $(wrapper).append('<div id="' + e2.value + '" class="category">' + e2.value + ' <a href="#" class="remove_field">Remove</a></div>'); //add input box
-                }
-                for (var i = 0; i < e2.length; i++) {
-                    if (e2.options[i].value == e2.value) {
-                        categories.push(e2.value);
-                        e2.remove(i);
-                    }
-                }
-            });
+        //     var x = 0; //initlal text box count
+        //     $(add_button).click(function(e){ //on add input button click
+        //         e.preventDefault();
+        //         if(x < max_fields){ //max input box allowed
+        //             x++; //text box increment
+        //             $(wrapper).append('<div id="' + e2.value + '" class="category">' + e2.value + '</div>'); //add input box
+        //             // $(wrapper).append('<div id="' + e2.value + '" class="category">' + e2.value + ' <a href="#" class="remove_field">Remove</a></div>'); //add input box
+        //         }
+        //         for (var i = 0; i < e2.length; i++) {
+        //             if (e2.options[i].value == e2.value) {
+        //                 categories.push(e2.value);
+        //                 e2.remove(i);
+        //             }
+        //         }
+        //     });
 
 
             // $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
@@ -53,17 +53,17 @@
             //     x--;
             // })
 
-        });
+        // });
 
 
-        $.ajax({
-            url: "{{url_for('test')}}",
-            type: "POST",
-            data: JSON.stringify({cats: categories}),
-            contentType: "application/json; charset=utf-8",
-            success: function(data) { console.log(data); }
-        });
-    </script> -->
+        // $.ajax({
+        //     url: "{{url_for('test')}}",
+        //     type: "POST",
+        //     data: JSON.stringify({}),
+        //     contentType: "application/json; charset=utf-8",
+        //     success: function(data) { console.log(data); }
+        // });
+    </script>
     <h1>Add a Course</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
@@ -101,7 +101,17 @@
             {{ form.estNum.label }}:<br>
             {{ form.estNum(size=40) }}<br>
         </p>
-        <p><input type="submit" value="Submit"></p>
+        <p><input class="btn" type="submit" value="Submit"></p>
     </form>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
+    <div class="temp"></div>
+    <script type="text/javascript">
+        var countChecked = function() {
+          var n = $( "input:checked" ).length;
+          $( "#temp" ).text( n + (n === 1 ? " is" : " are") + " checked!" );
+        };
+        countChecked();
+
+        $( "input[type=checkbox]" ).on( "click", countChecked );
+    </script>
 {% endblock %}
