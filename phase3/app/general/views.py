@@ -296,16 +296,17 @@ def add_course_admin():
     get_designation = 'SELECT name FROM designation;'
     get_category = 'SELECT name FROM category;'
     designation_list = []
-    category_list = []
+    category_html = ''
     # Setting the drop down values
     cursor.execute(get_designation)
     for item in cursor.fetchall():
         designation_list.append((item[0], item[0]))
     cursor.execute(get_category)
     for item in cursor.fetchall():
-        category_list.append((item[0], item[0]))
+        # html = '<option value="{}">{}</option>'.format(item[0], item[0])
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>'.format(item[0], item[0])
+        category_html += html
     form.designation.choices = designation_list
-    form.category.choices = category_list
     # Adding the course
     if form.validate_on_submit():
         cnum = form.courseNumber.data
@@ -313,24 +314,31 @@ def add_course_admin():
         instructor_f = form.instructor_f.data
         instructor_l = form.instructor_l.data
         designation = form.designation.data
-        category = form.category.data
         enum = form.estNum.data
         # queries
         check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber=\'{}\' OR name=\'{}\''.format(cnum, cname)
         result = cursor.execute(check_query)
         if not result:
             insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
-            print (insert_query)
-            insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, category)
-            print (insert_query_2)
+            # print (insert_query)
+            # insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, category)
+            # print (insert_query_2)
         else:
             flash('Conflict with Course Number or Course Name!')
     else:
         flash_errors(form)
-    return render_template('admin/add_course_admin.html', title='Add Course', form=form)
+    return render_template('admin/add_course_admin.html', title='Add Course', form=form, category_html=category_html)
 
 
 ################# END ADMIN FUNCTIONS #################
+cat = ''
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    data = request.get_json()
+    global cat
+    cat = data['cats']
+    print(cat)
+    return ''
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

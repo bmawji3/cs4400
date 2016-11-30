@@ -18,7 +18,7 @@ class CourseForm(FlaskForm):
     instructor_f = StringField('Instructor First Name', [InputRequired()])
     instructor_l = StringField('Instructor Last Name', [InputRequired()])
     designation = SelectField('Designation')
-    category = SelectField('Category')
+    # category = SelectField('Category')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 
 class EditProfileForm(FlaskForm):
