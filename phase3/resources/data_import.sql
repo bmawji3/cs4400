@@ -88,11 +88,18 @@ INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES
 INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Michael', 'Scott', 'number-one-boss@gatech.edu', 'Senior', 'Mechanical Engineering', 'Student');
 INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Jim', 'Halpert', 'jhalpert@gatech.edu', 'Senior', 'Computer Science', 'Student');
 INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Pam', 'Beasley', 'pbeasley@gatech.edu', 'Senior', 'Computer Science', 'Student');
+INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Harry', 'Potter', 'potter@gatech.edu', 'Senior', 'Computer Science', 'Student');
+INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Hermione', 'Granger', 'granger@gatech.edu', 'Senior', 'Computer Science', 'Student');
+INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Ron', 'Weasley', 'weasley@gatech.edu', 'Senior', 'Computer Science', 'Student');
+INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Ginny', 'Weasley', 'gweasley@gatech.edu', 'Junior', 'Computer Science', 'Student');
+INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Neville', 'Longbottom', 'longbottom@gatech.edu', 'Senior', 'Computer Science', 'Student');
+INSERT INTO user (username, password, gtEmail, year, majorName, userType) VALUES ('Luna', 'Lovegood', 'lovegood@gatech.edu', 'Junior', 'Computer Science', 'Student');
 INSERT INTO user (username, password, gtEmail, year, userType) VALUES ('Rabbit', 'trooper', 'rabbit@gatech.edu', 'Freshman', 'Student');
 INSERT INTO user (username, password, gtEmail, year, userType) VALUES ('Thorny', 'trooper', 'thorny@gatech.edu', 'Freshman', 'Student');
 INSERT INTO user (username, password, gtEmail, year, userType) VALUES ('Mac', 'trooper', 'mac@gatech.edu', 'Freshman', 'Student');
 INSERT INTO user (username, password, gtEmail, year, userType) VALUES ('Farva', 'shenanigans', 'shenanigans@gatech.edu', 'Freshman', 'Student');
 INSERT INTO user (username, password, gtEmail, year, userType) VALUES ('Foster', 'trooper', 'foster@gatech.edu', 'Freshman', 'Student');
+
 
 -- Admin
 INSERT INTO user (username, password, userType) VALUES ('normal', 'admin', 'Admin');
@@ -100,6 +107,14 @@ INSERT INTO user (username, password, userType) VALUES ('super', 'admin', 'Admin
 INSERT INTO user (username, password, userType) VALUES ('l33t', 'h4x0r', 'Admin');
 INSERT INTO user (username, password, userType) VALUES ('s00p3r', 'l33t', 'Admin');
 INSERT INTO user (username, password, userType) VALUES ('guess', 'mypassword', 'Admin');
+
+-- APPLIES FOR
+INSERT INTO applies_for (studentUserName, projectName, date, status) VALUES ('Harry', 'Dragon', NOW(), 'accepted');
+INSERT INTO applies_for (studentUserName, projectName, date, status) VALUES ('Hermione', 'Three-headed Dog', NOW(), 'accepted');
+INSERT INTO applies_for (studentUserName, projectName, date, status) VALUES ('Ron', 'Acromantula', NOW(), 'accepted');
+INSERT INTO applies_for (studentUserName, projectName, date, status) VALUES ('Ginny', 'Basilisk', NOW(), 'accepted');
+INSERT INTO applies_for (studentUserName, projectName, date, status) VALUES ('Neville', 'Centaur', NOW(), 'pending');
+INSERT INTO applies_for (studentUserName, projectName, date, status) VALUES ('Luna', 'Thestral', NOW(), 'rejected');
 
 -- COURSE
 INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('ARCH 4803', 'Green Infrastructure: EPA Campus Rainwater Challenge', 'Richard', 'Dagenhart', 'Sustainable Communities', '26');

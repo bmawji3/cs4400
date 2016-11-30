@@ -316,12 +316,15 @@ def add_course_admin():
         category = form.category.data
         enum = form.estNum.data
         # queries
-        check_cnum = 'SELECT courseNumber FROM course WHERE courseNumber=\'{}\''.format(cnum)
-        check_cname = 'SELECT name FROM course WHERE ame=\'{}\''.format(cname)
-        insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
-        print (insert_query)
-        insert_query_2 = ''
-
+        check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber=\'{}\' OR name=\'{}\''.format(cnum, cname)
+        result = cursor.execute(check_query)
+        if not result:
+            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            print (insert_query)
+            insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, category)
+            print (insert_query_2)
+        else:
+            flash('Conflict with Course Number or Course Name!')
     else:
         flash_errors(form)
     return render_template('admin/add_course_admin.html', title='Add Course', form=form)

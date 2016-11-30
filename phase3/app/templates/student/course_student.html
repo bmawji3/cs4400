@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>View Course</h1>
-    <h1>{{ course }}</h1>
+    <h3>Course: {{ course }}</h3>
     <button onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
 {% endblock %}
