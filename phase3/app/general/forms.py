@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SelectField
+from wtforms import StringField, IntegerField, SelectField, BooleanField
 from wtforms.validators import InputRequired, EqualTo, Email
 
 class LoginForm(FlaskForm):
@@ -24,3 +24,12 @@ class CourseForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     new_major = SelectField('Major')
     new_year = SelectField('Year')
+
+class SearchClassProject(FlaskForm):
+    title = StringField('Title', [InputRequired()])
+    category = SelectField('Category')
+    designation = SelectField('Designation')
+    major = SelectField('Major')
+    year = SelectField('Year')
+    project = BooleanField('Project', default=False)
+    course = BooleanField('Course', default=False)

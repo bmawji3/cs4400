@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject
 from .models import User
 
 conn = mysql.connect()
@@ -93,9 +93,45 @@ def main_student():
     else:
         flash('You are not logged in!')
         return redirect(url_for('login'))
-    # Code after this comment
+    form = SearchClassProject()
+    # Queries to fill drop down
+    get_categories = 'SELECT name FROM category;'
+    get_majors = 'SELECT majorName FROM major;'
+    get_desigs = 'SELECT name FROM designation;'
+    category_list = []
+    desig_list = []
+    major_list = []
+    year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
+    # Setting the drop down values
+    cursor.execute(get_categories)
+    for item in cursor.fetchall():
+        category_list.append((item[0], item[0]))
+    cursor.execute(get_majors)
+    for item in cursor.fetchall():
+        major_list.append((item[0], item[0]))
+    cursor.execute(get_desigs)
+    for item in cursor.fetchall():
+        desig_list.append((item[0], item[0]))
+    form.category.choices = category_list
+    form.designation.choices = desig_list
+    form.major.choices = major_list
+    form.year.choices = year_list
+    # Searching
+    if form.validate_on_submit():
+        major = form.major.data
+        year = form.year.data
+        designation = form.designation.data
+        category = form.category.data
+        title_search = form.title.data
+        is_project = form.project.data
+        is_course = form.course.data
+        if is_project:
+            query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
+            print(query)
+    else:
+        flash_errors(form)
 
-    return render_template('student/main_student.html', title='Main')
+    return render_template('student/main_student.html', title='Main', form=form)
 
 
 @app.route('/me-student', methods=['GET', 'POST'])
@@ -108,7 +144,6 @@ def me_student():
     else:
         flash('You are not logged in!')
         return redirect(url_for('login'))
-    # Code after this comment
 
     return render_template('student/me_student.html', title='Me')
 
@@ -123,12 +158,10 @@ def edit_student():
     else:
         flash('You are not logged in!')
         return redirect(url_for('login'))
-    # Code after this comment
     form = EditProfileForm()
     # Queries to fill drop down
     get_majors = 'SELECT majorName FROM major;'
     major_list = []
-    dept = ''
     year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
     # Setting the drop down values
     cursor.execute(get_majors)
@@ -143,10 +176,8 @@ def edit_student():
         get_department = 'SELECT deptName from major where majorName = \'{}\''.format(major)
         cursor.execute(get_department)
         dept = cursor.fetchall()[0][0]
-        print(dept[0][0])
         # queries
         update_query = 'UPDATE user SET majorName = \'{}\', year = \'{}\' WHERE username = \'{}\''.format(major, year, session.get('username'))
-        print(update_query)
         cursor.execute(update_query)
         conn.commit()
     else:
