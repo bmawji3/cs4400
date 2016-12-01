@@ -304,7 +304,7 @@ def add_course_admin():
     cursor.execute(get_category)
     for item in cursor.fetchall():
         # html = '<option value="{}">{}</option>'.format(item[0], item[0])
-        html = '<input type="checkbox" name="category" value="{}"><br>\n'.format(item[0])
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
     form.designation.choices = designation_list
     # Adding the course
@@ -332,12 +332,16 @@ def add_course_admin():
 
 ################# END ADMIN FUNCTIONS #################
 cat = ''
+tnum = 0
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     data = request.get_json()
-    # global cat
-    # cat = data['cats']
-    # print(cat)
+    global cat
+    cat = data['cats']
+    global tnum
+    tnum = data['nums']
+    print(cat)
+    print(tnum)
     return ''
 
 @app.route('/logout', methods=['GET', 'POST'])
