@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, AddProjectForm
 from .models import User
 
 conn = mysql.connect()

@@ -28,7 +28,7 @@ class EditProfileForm(FlaskForm):
 class AddProjectForm(FlaskForm):
     name = StringField('Project Name', [InputRequired()])
     advisor = StringField('Advisor', [InputRequired()])
-    advisorEmail = StringField('Advisor Email', [InputRequired()])
+    advisorEmail = StringField('Advisor Email', [InputRequired(), Email()])
     description = StringField('Description', [InputRequired()])
     designation = SelectField('Designation')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
