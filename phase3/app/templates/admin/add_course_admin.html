@@ -1,5 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
+    <script type="text/javascript">
+        var categories = [];
+        function myfunc() {
+            var inputs = document.getElementsByTagName("input");
+            var checked = []; //will contain all checked checkboxes
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].type == "checkbox") {
+                    if (inputs[i].checked) {
+                        checked.push(inputs[i].value);
+                        categories.push(inputs[i].value);
+                    }
+                }
+            }
+            var nbChecked = checked.length; //number of checked checkboxes
+            $.ajax({
+                url: "{{url_for('test')}}",
+                type: "POST",
+                data: JSON.stringify({cats: categories, nums: nbChecked}),
+                contentType: "application/json; charset=utf-8",
+                success: function(data) { console.log(data); }
+            });
+            // x: [1.0,2.0,3.0]
+        }
+    </script>
     <h1>Add a Course</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
@@ -24,14 +48,14 @@
             {{ form.designation() }}<br>
         </p>
         <p>
-            {{ form.category.label }}:<br>
-            {{ form.category() }}<br>
+            <label for="category">Category</label>:<br>
+            {{ category_html | safe }}
         </p>
         <p>
             {{ form.estNum.label }}:<br>
             {{ form.estNum(size=40) }}<br>
         </p>
-        <p><input type="submit" value="Submit"></p>
+        <p><input type="submit" value="Submit" onclick="myfunc()"></p>
     </form>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
 {% endblock %}

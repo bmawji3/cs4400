@@ -18,7 +18,7 @@ class CourseForm(FlaskForm):
     instructor_f = StringField('Instructor First Name', [InputRequired()])
     instructor_l = StringField('Instructor Last Name', [InputRequired()])
     designation = SelectField('Designation')
-    category = SelectField('Category')
+    # category = SelectField('Category')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 
 class EditProfileForm(FlaskForm):
@@ -33,3 +33,11 @@ class SearchClassProject(FlaskForm):
     year = SelectField('Year')
     project = BooleanField('Project', default=False)
     course = BooleanField('Course', default=False)
+
+class AddProjectForm(FlaskForm):
+    name = StringField('Project Name', [InputRequired()])
+    advisor = StringField('Advisor', [InputRequired()])
+    advisorEmail = StringField('Advisor Email', [InputRequired(), Email()])
+    description = StringField('Description', [InputRequired()])
+    designation = SelectField('Designation')
+    estNum = IntegerField('Estimated # of students', [InputRequired()])

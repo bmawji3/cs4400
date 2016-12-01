@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm
 from .models import User
 
 conn = mysql.connect()
@@ -307,8 +307,10 @@ def add_project_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
-    return render_template('admin/add_project_admin.html', title='Add Project')
+    form = AddProjectForm()
+    get_designation = 'SELECT name FROM designation;'
+    get_category = 'SELECT name FROM category;'
+    return render_template('admin/add_project_admin.html', title='Add Project', form=form)
 
 
 @app.route('/add-course-admin', methods=['GET', 'POST'])
@@ -327,38 +329,58 @@ def add_course_admin():
     get_designation = 'SELECT name FROM designation;'
     get_category = 'SELECT name FROM category;'
     designation_list = []
-    category_list = []
+    category_html = ''
     # Setting the drop down values
     cursor.execute(get_designation)
     for item in cursor.fetchall():
         designation_list.append((item[0], item[0]))
     cursor.execute(get_category)
     for item in cursor.fetchall():
-        category_list.append((item[0], item[0]))
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
     form.designation.choices = designation_list
-    form.category.choices = category_list
     # Adding the course
     if form.validate_on_submit():
+        if tnum == 0:
+            flash('Error in the Category field - This field is required.')
+            return redirect(url_for('add_course_admin'))
         cnum = form.courseNumber.data
         cname = form.courseName.data
         instructor_f = form.instructor_f.data
         instructor_l = form.instructor_l.data
         designation = form.designation.data
-        category = form.category.data
         enum = form.estNum.data
         # queries
-        check_cnum = 'SELECT courseNumber FROM course WHERE courseNumber=\'{}\''.format(cnum)
-        check_cname = 'SELECT name FROM course WHERE ame=\'{}\''.format(cname)
-        insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
-        print (insert_query)
-        insert_query_2 = ''
-
+        check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber=\'{}\' OR name=\'{}\''.format(cnum, cname)
+        result = cursor.execute(check_query)
+        if not result:
+            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            cursor.execute(insert_query)
+            for c in cat:
+                insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
+                cursor.execute(insert_query_2)
+            conn.commit()
+            flash('Course has been inserted!')
+            return redirect(url_for('add_course_admin'))
+        else:
+            flash('Conflict with Course Number or Course Name!')
     else:
         flash_errors(form)
-    return render_template('admin/add_course_admin.html', title='Add Course', form=form)
+    return render_template('admin/add_course_admin.html', title='Add Course', form=form, category_html=category_html)
 
 
 ################# END ADMIN FUNCTIONS #################
+cat = ''
+tnum = 0
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    data = request.get_json()
+    global cat
+    cat = data['cats']
+    global tnum
+    tnum = data['nums']
+    return ''
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
