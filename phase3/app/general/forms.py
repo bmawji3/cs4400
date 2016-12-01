@@ -26,4 +26,9 @@ class EditProfileForm(FlaskForm):
     new_year = SelectField('Year')
 
 class AddProjectForm(FlaskForm):
-    name = StringField('Project Name')
+    name = StringField('Project Name', [InputRequired()])
+    advisor = StringField('Advisor', [InputRequired()])
+    advisorEmail = StringField('Advisor Email', [InputRequired()])
+    description = StringField('Description', [InputRequired()])
+    designation = SelectField('Designation')
+    estNum = IntegerField('Estimated # of students', [InputRequired()])
