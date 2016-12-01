@@ -279,7 +279,7 @@ def add_project_admin():
     form = AddProjectForm()
     get_designation = 'SELECT name FROM designation;'
     get_category = 'SELECT name FROM category;'
-    return render_template('admin/add_project_admin.html', title='Add Project')
+    return render_template('admin/add_project_admin.html', title='Add Project', form=form)
 
 
 @app.route('/add-course-admin', methods=['GET', 'POST'])
