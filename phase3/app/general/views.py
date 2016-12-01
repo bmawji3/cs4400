@@ -305,12 +305,14 @@ def add_course_admin():
         designation_list.append((item[0], item[0]))
     cursor.execute(get_category)
     for item in cursor.fetchall():
-        # html = '<option value="{}">{}</option>'.format(item[0], item[0])
         html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
     form.designation.choices = designation_list
     # Adding the course
     if form.validate_on_submit():
+        if tnum == 0:
+            flash('Error in the Category field - This field is required.')
+            return redirect(url_for('add_course_admin'))
         cnum = form.courseNumber.data
         cname = form.courseName.data
         instructor_f = form.instructor_f.data
@@ -322,9 +324,13 @@ def add_course_admin():
         result = cursor.execute(check_query)
         if not result:
             insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
-            # print (insert_query)
-            # insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, category)
-            # print (insert_query_2)
+            cursor.execute(insert_query)
+            for c in cat:
+                insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
+                cursor.execute(insert_query_2)
+            conn.commit()
+            flash('Course has been inserted!')
+            return redirect(url_for('add_course_admin'))
         else:
             flash('Conflict with Course Number or Course Name!')
     else:
@@ -342,9 +348,8 @@ def test():
     cat = data['cats']
     global tnum
     tnum = data['nums']
-    print(cat)
-    print(tnum)
     return ''
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

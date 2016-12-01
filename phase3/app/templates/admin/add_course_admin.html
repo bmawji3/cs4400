@@ -1,60 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
     <script type="text/javascript">
-        // var categories = [];
-        // function getCategories() {
-        //     var objPush = {};
-        //     objPush.value = "jquery";
-        //     objPush.label = "jQuery";
-        //     objPush.desc = "the write less, do more, JavaScript library";
-        //     // var elems = document.getElementsByClassName('category');
-        //     // console.log(elems);
-        //     // var arr = jQuery.makeArray(elems);
-        //     categories.push(objPush);
-        //     alert(categories);
-        // }
-
-        // $(document).ready(function() {
-        //     var max_fields      = 9; //maximum input boxes allowed
-        //     var wrapper         = $(".cat_list"); //Fields wrapper
-        //     var add_button      = $(".btn"); //Add button ID
-        //     var e2 = document.getElementById('category');
-
-        //     var x = 0; //initlal text box count
-        //     $(add_button).click(function(e){ //on add input button click
-        //         e.preventDefault();
-        //         if(x < max_fields){ //max input box allowed
-        //             x++; //text box increment
-        //             $(wrapper).append('<div id="' + e2.value + '" class="category">' + e2.value + '</div>'); //add input box
-        //             // $(wrapper).append('<div id="' + e2.value + '" class="category">' + e2.value + ' <a href="#" class="remove_field">Remove</a></div>'); //add input box
-        //         }
-        //         for (var i = 0; i < e2.length; i++) {
-        //             if (e2.options[i].value == e2.value) {
-        //                 categories.push(e2.value);
-        //                 e2.remove(i);
-        //             }
-        //         }
-        //     });
-
-
-            // $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
-            //     e.preventDefault();
-            //     var replacement = $(this).parent('div').prop('id');
-            //     var option = document.createElement("option");
-            //     option.text = replacement;
-            //     e2.add(option);
-            //     for (var i = 0; i < categories.length; i++) {
-            //         if (categories[i] == replacement) {
-            //             delete categories[i];
-            //         }
-            //     }
-            //     console.log(categories);
-            //     $(this).parent('div').remove();
-            //     x--;
-            // })
-
-        // });
-
         var categories = [];
         function myfunc() {
             var inputs = document.getElementsByTagName("input");
@@ -77,7 +23,6 @@
             });
             // x: [1.0,2.0,3.0]
         }
-
     </script>
     <h1>Add a Course</h1>
     <form action="" method="post" name="login">
@@ -102,12 +47,10 @@
             {{ form.designation.label }}:<br>
             {{ form.designation() }}<br>
         </p>
-
         <p>
             <label for="category">Category</label>:<br>
             {{ category_html | safe }}
         </p>
-
         <p>
             {{ form.estNum.label }}:<br>
             {{ form.estNum(size=40) }}<br>
