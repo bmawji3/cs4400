@@ -276,7 +276,9 @@ def add_project_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
+    form = AddProjectForm()
+    get_designation = 'SELECT name FROM designation;'
+    get_category = 'SELECT name FROM category;'
     return render_template('admin/add_project_admin.html', title='Add Project')
 
 
