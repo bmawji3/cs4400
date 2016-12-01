@@ -24,3 +24,6 @@ class CourseForm(FlaskForm):
 class EditProfileForm(FlaskForm):
     new_major = SelectField('Major')
     new_year = SelectField('Year')
+
+class AddProjectForm(FlaskForm):
+    name = StringField('Project Name')
