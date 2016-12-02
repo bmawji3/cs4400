@@ -123,11 +123,8 @@ def main_student():
         designation = form.designation.data
         category = form.category.data
         title_search = form.title.data
-        is_project = form.project.data
-        is_course = form.course.data
-        if is_project:
-            query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
-            print(query)
+        query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
+        print(query)
     else:
         flash_errors(form)
 
@@ -169,6 +166,7 @@ def edit_student():
         major_list.append((item[0], item[0]))
     form.new_major.choices = major_list
     form.new_year.choices = year_list
+    dept = 'N/A'
     # Editing the profile
     if form.validate_on_submit():
         major = form.new_major.data
@@ -381,6 +379,13 @@ def test():
     tnum = data['nums']
     return ''
 
+cat_result = ''
+@app.route('/test_search', methods=['GET', 'POST'])
+def test_search():
+    data = request.get_json()
+    global cat_result
+    cat_result = data['cat_result']
+    return ''
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
