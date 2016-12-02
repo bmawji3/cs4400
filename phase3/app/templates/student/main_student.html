@@ -1,4 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Main Page</h1>
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}:<br>
+            {{ form.title(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.category.label }}:<br>
+            {{ form.category() }}<br>
+        </p>
+        <p>
+            {{ form.designation.label }}:<br>
+            {{ form.designation() }}<br>
+        </p>
+        <p>
+            {{ form.major.label }}:<br>
+            {{ form.major() }}<br>
+        </p>
+        <p>
+            {{ form.year.label }}:<br>
+            {{ form.year() }}<br>
+        </p>
+        <p>
+            {{ form.project.label }}:<br>
+            {{ form.project(size=5) }}<br>
+        </p>
+        <p>
+            {{ form.course.label }}:<br>
+            {{ form.course(size=5) }}<br>
+        </p>
+        <p>
+            <b>
+            </b>
+        </p>
+        <p><input type="submit" value="Apply Filter"></p>
+    </form>
 {% endblock %}
