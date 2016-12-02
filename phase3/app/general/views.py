@@ -215,21 +215,59 @@ def project_student():
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Dragon'
-    query = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\''.format(project_name)
-    cursor.execute(query)
-    res = cursor.fetchall()
+    project_name = 'Thestral'
+    query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
+    cursor.execute(query_project)
+    res_project = cursor.fetchall()
 
-    estNum = res[0][0]
-    description = res[0][1]
-    advfName = res[0][2]
-    advlName = res[0][3]
-    advEmail = res[0][4]
-    desigName = res[0][5]
+    estNum = res_project[0][0]
+    description = res_project[0][1]
+    advfName = res_project[0][2]
+    advlName = res_project[0][3]
+    advEmail = res_project[0][4]
+    desigName = res_project[0][5]
+
+    categories = ''
+    query_categories = 'SELECT categoryName FROM project_category WHERE projectName = \'{}\';'.format(project_name)
+    cursor.execute(query_categories)
+    res_categories = cursor.fetchall()
+
+    hasCategories = 0
+    for category in res_categories:
+        categories += category[0] + ', ';
+        hasCategories = 1
+
+    if hasCategories:
+        categories = categories[:-2]
+
+    requirements = ''
+    query_requirements = 'SELECT pRequirement FROM project_requirements WHERE pName = \'{}\';'.format(project_name)
+    cursor.execute(query_requirements)
+    res_requirements = cursor.fetchall()
+
+    hasRequirements = 0
+    for requirement in res_requirements:
+        requirements += requirement[0] + '; ';
+        hasRequirements = 1
+
+    if hasRequirements:
+        requirements = requirements[:-2]
 
     if form.validate_on_submit():
-        flash('you have submitted!')
-        print(session['username'])
+        student_username = session['username']
+        query_application = 'SELECT status FROM applies_for WHERE studentUsername = \'{}\' AND projectName = \'{}\';'.format(student_username, project_name)
+        cursor.execute(query_application)
+        if cursor.rowcount:
+            status = cursor.fetchall()[0][0]
+            if status == 'accepted':
+                flash('You\'ve already been accepted!')
+            elif status == 'rejected':
+                flash('Sorry, you\'ve been rejected -- you cannot apply again.')
+            elif status == 'pending':
+                flash('Your application is pending -- hang tight!')
+        else:
+            flash('in progress')
+        #print(session['username'])
     else:
         flash_errors(form)
 
@@ -242,6 +280,8 @@ def project_student():
         advlName=advlName,
         advEmail=advEmail,
         desigName=desigName,
+        categories=categories,
+        requirements=requirements,
         form=form)
 
 
@@ -257,8 +297,39 @@ def course_student():
         return redirect(url_for('login'))
     # Code after this comment
 
-    course = 'CS/PSYC 3750'
-    return render_template('student/course_student.html', title='View Course', course=course)
+    course_number = 'CS 3600'
+    query_course = 'SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = \'{}\';'.format(course_number)
+    cursor.execute(query_course)
+    res_course = cursor.fetchall()
+
+    course_name = res_course[0][0]
+    instructorfName = res_course[0][1]
+    instructorlName = res_course[0][2]
+    designation = res_course[0][3]
+    estNumberStudents = res_course[0][4]
+
+    categories = ''
+    query_categories = 'SELECT categoryName FROM course_category WHERE courseNumber = \'{}\';'.format(course_number)
+    cursor.execute(query_categories)
+    res_categories = cursor.fetchall()
+
+    hasCategories = 0
+    for category in res_categories:
+        categories += category[0] + ', ';
+        hasCategories = 1
+
+    if hasCategories:
+        categories = categories[:-2]
+
+    return render_template('student/course_student.html',
+        title='View Course',
+        course_number=course_number,
+        course_name=course_name,
+        instructorfName=instructorfName,
+        instructorlName=instructorlName,
+        designation=designation,
+        categories=categories,
+        estNumberStudents=estNumberStudents)
 
 
 ################# END STUDENT FUNCTIONS #################
