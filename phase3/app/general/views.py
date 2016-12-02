@@ -162,6 +162,7 @@ def edit_student():
     # Queries to fill drop down
     get_majors = 'SELECT majorName FROM major;'
     major_list = []
+    dept = ''
     year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
     # Setting the drop down values
     cursor.execute(get_majors)
