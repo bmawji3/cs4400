@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>View and Apply Project</h1>
-    <h1>{{ project }}</h1>
+    <h3>{{ name }}</h3>
+    <p>
+        <b>Adviser:</b> {{ adviser_name }} ({{ adviser_email }})
+    </p>
+    <!--<p>
+        <b>Description:</b>
+        {{ description }}
+    </p>
+    <p>
+        <b>Designation:</b> {{ designation }}
+    </p>
+    <p>
+        <b>Category:</b> {{ category }}
+    </p>
+    <p>
+        <b>Requirements:</b> {{ requirements }}
+    </p>
+    <p>
+        <b>Estimated number of students:</b> {{ estimated_num_students }}
+    </p>-->
+
     <button onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
 {% endblock %}
