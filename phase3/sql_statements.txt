@@ -29,3 +29,7 @@ INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gat
 -- Add Project
 
 -- Add Course
+SELECT * FROM course WHERE courseNumber='CS 4400' OR name='Databases'
+INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('qqq 111', 'qqq - the real qqq', 'Q', 'QQ', 'Community', 432)
+INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'computing for good')
+INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'urban development')
