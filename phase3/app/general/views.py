@@ -285,7 +285,7 @@ def application_admin():
     displayedStuff = 'SELECT * from applies_for;'
     cursor.execute(displayedStuff)
     for item in cursor.fetchall():
-        html = #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        html = ''#'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
     return render_template('admin/application_admin.html', title='View Applications')
 
