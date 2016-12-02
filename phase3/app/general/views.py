@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm, ProjectForm
 from .models import User
 
 conn = mysql.connect()
@@ -159,6 +159,7 @@ def edit_student():
     # Queries to fill drop down
     get_majors = 'SELECT majorName FROM major;'
     major_list = []
+    dept = ''
     year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
     # Setting the drop down values
     cursor.execute(get_majors)
@@ -210,9 +211,76 @@ def project_student():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
+    form = ProjectForm()
 
-    project = 'Know Your Water'
-    return render_template('student/project_student.html', title='View and Apply Project', project=project)
+    project_name = 'Thestral'
+    query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
+    cursor.execute(query_project)
+    res_project = cursor.fetchall()
+
+    estNum = res_project[0][0]
+    description = res_project[0][1]
+    advfName = res_project[0][2]
+    advlName = res_project[0][3]
+    advEmail = res_project[0][4]
+    desigName = res_project[0][5]
+
+    categories = ''
+    query_categories = 'SELECT categoryName FROM project_category WHERE projectName = \'{}\';'.format(project_name)
+    cursor.execute(query_categories)
+    res_categories = cursor.fetchall()
+
+    hasCategories = 0
+    for category in res_categories:
+        categories += category[0] + ', ';
+        hasCategories = 1
+
+    if hasCategories:
+        categories = categories[:-2]
+
+    requirements = ''
+    query_requirements = 'SELECT pRequirement FROM project_requirements WHERE pName = \'{}\';'.format(project_name)
+    cursor.execute(query_requirements)
+    res_requirements = cursor.fetchall()
+
+    hasRequirements = 0
+    for requirement in res_requirements:
+        requirements += requirement[0] + '; ';
+        hasRequirements = 1
+
+    if hasRequirements:
+        requirements = requirements[:-2]
+
+    if form.validate_on_submit():
+        student_username = session['username']
+        query_application = 'SELECT status FROM applies_for WHERE studentUsername = \'{}\' AND projectName = \'{}\';'.format(student_username, project_name)
+        cursor.execute(query_application)
+        if cursor.rowcount:
+            status = cursor.fetchall()[0][0]
+            if status == 'accepted':
+                flash('You\'ve already been accepted!')
+            elif status == 'rejected':
+                flash('Sorry, you\'ve been rejected -- you cannot apply again.')
+            elif status == 'pending':
+                flash('Your application is pending -- hang tight!')
+        else:
+            flash('in progress')
+        #print(session['username'])
+    else:
+        flash_errors(form)
+
+    return render_template('student/project_student.html',
+        title='View and Apply Project',
+        project_name=project_name,
+        estNum=estNum,
+        description=description,
+        advfName=advfName,
+        advlName=advlName,
+        advEmail=advEmail,
+        desigName=desigName,
+        categories=categories,
+        requirements=requirements,
+        form=form)
 
 
 @app.route('/course-student', methods=['GET', 'POST'])
@@ -227,8 +295,39 @@ def course_student():
         return redirect(url_for('login'))
     # Code after this comment
 
-    course = 'CS/PSYC 3750'
-    return render_template('student/course_student.html', title='View Course', course=course)
+    course_number = 'CS 3600'
+    query_course = 'SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = \'{}\';'.format(course_number)
+    cursor.execute(query_course)
+    res_course = cursor.fetchall()
+
+    course_name = res_course[0][0]
+    instructorfName = res_course[0][1]
+    instructorlName = res_course[0][2]
+    designation = res_course[0][3]
+    estNumberStudents = res_course[0][4]
+
+    categories = ''
+    query_categories = 'SELECT categoryName FROM course_category WHERE courseNumber = \'{}\';'.format(course_number)
+    cursor.execute(query_categories)
+    res_categories = cursor.fetchall()
+
+    hasCategories = 0
+    for category in res_categories:
+        categories += category[0] + ', ';
+        hasCategories = 1
+
+    if hasCategories:
+        categories = categories[:-2]
+
+    return render_template('student/course_student.html',
+        title='View Course',
+        course_number=course_number,
+        course_name=course_name,
+        instructorfName=instructorfName,
+        instructorlName=instructorlName,
+        designation=designation,
+        categories=categories,
+        estNumberStudents=estNumberStudents)
 
 
 ################# END STUDENT FUNCTIONS #################
@@ -260,7 +359,11 @@ def application_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
+    displayedStuff = 'SELECT * from applies_for;'
+    cursor.execute(displayedStuff)
+    for item in cursor.fetchall():
+        html = ''#'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
     return render_template('admin/application_admin.html', title='View Applications')
 
 
@@ -308,6 +411,16 @@ def add_project_admin():
     form = AddProjectForm()
     get_designation = 'SELECT name FROM designation;'
     get_category = 'SELECT name FROM category;'
+    designation_list = []
+    category_html = ''
+    cursor.execute(get_designation)
+    for item in cursor.fetchall():
+        designation_list.append((item[0], item[0]))
+    cursor.execute(get_category)
+    for item in cursor.fetchall():
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
+    form.designation.choices = designation_list
     return render_template('admin/add_project_admin.html', title='Add Project', form=form)
 
 

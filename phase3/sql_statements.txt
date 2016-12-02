@@ -1,0 +1,35 @@
+-- Team 75
+-- Credentials
+SELECT * FROM user WHERE username = 'walter' AND password = 'white';
+
+-- STUDENT
+-- Make Account
+SELECT * FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
+INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gatech.edu')
+
+-- Filter/Search
+
+-- Edit Profile
+
+-- View Applications
+
+-- View Project
+
+-- Apply Project
+
+-- View Course
+
+-- ADMIN
+-- View Applications
+
+-- View Popular Project Report
+
+-- View Application Report
+
+-- Add Project
+
+-- Add Course
+SELECT * FROM course WHERE courseNumber='CS 4400' OR name='Databases'
+INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('qqq 111', 'qqq - the real qqq', 'Q', 'QQ', 'Community', 432)
+INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'computing for good')
+INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'urban development')

@@ -35,8 +35,14 @@ class SearchClassProject(FlaskForm):
 
 class AddProjectForm(FlaskForm):
     name = StringField('Project Name', [InputRequired()])
-    advisor = StringField('Advisor', [InputRequired()])
+    advisorFName = StringField('Advisor First Name', [InputRequired()])
+    advisorLName = StringField('Advisor Last Name', [InputRequired()])
     advisorEmail = StringField('Advisor Email', [InputRequired(), Email()])
     description = StringField('Description', [InputRequired()])
     designation = SelectField('Designation')
+    requirements = SelectField('Requirements')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
+
+class ProjectForm(FlaskForm):
+    name = StringField('Name')
+

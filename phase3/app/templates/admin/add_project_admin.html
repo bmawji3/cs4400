@@ -1,5 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Add a Project</h1>
+    <h1>Add a Course</h1>
+    <form action="" method="post" name="addproject">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}:<br>
+            {{ form.name(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.advisorFName.label }}:<br>
+            {{ form.advisorFName(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.advisorLName.label }}:<br>
+            {{ form.advisorLName(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.advisorEmail.label }}:<br>
+            {{ form.advisorEmail(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.description.label }}:<br>
+            {{ form.description(size=40) }}<br>
+        </p>
+        <p>
+            {{ form.designation.label }}:<br>
+            {{ form.designation() }}<br>
+        </p>
+        <p>
+            <label for="category">Category</label>:<br>
+            {{ category_html | safe }}
+        </p>
+        <p>
+            {{ form.advisorEmail.label }}:<br>
+            {{ form.advisorEmail(size=40) }}<br>
+        </p>estNum
+        <p>
+            {{ form.estNum.label }}:<br>
+            {{ form.estNum(size=40) }}<br>
+        </p>
+        <p><input type="submit" value="Submit" onclick="myfunc()"></p>
+    </form>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
 {% endblock %}
