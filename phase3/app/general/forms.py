@@ -43,3 +43,7 @@ class AddProjectForm(FlaskForm):
     designation = SelectField('Designation')
     requirements = SelectField('Requirements')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
+
+class ProjectForm(FlaskForm):
+    name = StringField('Name')
+

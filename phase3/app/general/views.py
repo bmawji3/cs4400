@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm, ProjectForm
 from .models import User
 
 conn = mysql.connect()
@@ -213,6 +213,7 @@ def project_student():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
+    form = ProjectForm()
 
     project_name = 'Dragon'
     query = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\''.format(project_name)
@@ -226,6 +227,12 @@ def project_student():
     advEmail = res[0][4]
     desigName = res[0][5]
 
+    if form.validate_on_submit():
+        print('you have submitted!')
+        print(session['username'])
+    else:
+        flash_errors(form)
+
     return render_template('student/project_student.html',
         title='View and Apply Project',
         project_name=project_name,
@@ -234,7 +241,8 @@ def project_student():
         advfName=advfName,
         advlName=advlName,
         advEmail=advEmail,
-        desigName=desigName)
+        desigName=desigName,
+        form=form)
 
 
 @app.route('/course-student', methods=['GET', 'POST'])

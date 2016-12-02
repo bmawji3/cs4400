@@ -21,5 +21,9 @@
     <p>
         <b>Estimated number of students:</b> {{ estNum }}
     </p>
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p><input type="submit" value="Apply"></p>
+    </form>
     <button onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
 {% endblock %}
