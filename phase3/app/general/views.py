@@ -214,8 +214,27 @@ def project_student():
         return redirect(url_for('login'))
     # Code after this comment
 
-    project = 'Know Your Water'
-    return render_template('student/project_student.html', title='View and Apply Project', project=project)
+    project_name = 'Dragon'
+    query = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\''.format(project_name)
+    cursor.execute(query)
+    res = cursor.fetchall()
+
+    estNum = res[0][0]
+    description = res[0][1]
+    advfName = res[0][2]
+    advlName = res[0][3]
+    advEmail = res[0][4]
+    desigName = res[0][5]
+
+    return render_template('student/project_student.html',
+        title='View and Apply Project',
+        project_name=project_name,
+        estNum=estNum,
+        description=description,
+        advfName=advfName,
+        advlName=advlName,
+        advEmail=advEmail,
+        desigName=desigName)
 
 
 @app.route('/course-student', methods=['GET', 'POST'])
