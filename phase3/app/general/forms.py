@@ -41,4 +41,5 @@ class AddProjectForm(FlaskForm):
     advisorEmail = StringField('Advisor Email', [InputRequired(), Email()])
     description = StringField('Description', [InputRequired()])
     designation = SelectField('Designation')
+    requirements = SelectField('Requirements')
     estNum = IntegerField('Estimated # of students', [InputRequired()])
