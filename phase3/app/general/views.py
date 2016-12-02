@@ -262,7 +262,11 @@ def application_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
+    displayedStuff = 'SELECT * from applies_for;'
+    cursor.execute(displayedStuff)
+    for item in cursor.fetchall():
+        html = #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
     return render_template('admin/application_admin.html', title='View Applications')
 
 
@@ -310,6 +314,16 @@ def add_project_admin():
     form = AddProjectForm()
     get_designation = 'SELECT name FROM designation;'
     get_category = 'SELECT name FROM category;'
+    designation_list = []
+    category_html = ''
+    cursor.execute(get_designation)
+    for item in cursor.fetchall():
+        designation_list.append((item[0], item[0]))
+    cursor.execute(get_category)
+    for item in cursor.fetchall():
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
+    form.designation.choices = designation_list
     return render_template('admin/add_project_admin.html', title='Add Project', form=form)
 
 
