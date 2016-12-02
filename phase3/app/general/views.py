@@ -228,7 +228,7 @@ def project_student():
     desigName = res[0][5]
 
     if form.validate_on_submit():
-        print('you have submitted!')
+        flash('you have submitted!')
         print(session['username'])
     else:
         flash_errors(form)
