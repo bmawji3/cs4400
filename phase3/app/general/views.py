@@ -373,7 +373,7 @@ def project_student():
 
             if pMajorRequirement == 'none' and pDeptRequirement == 'none':
                 satisfiesMajorRequirement = 1
-                satisfiesDepartmentRequirement = 1 
+                satisfiesDepartmentRequirement = 1
 
             if pYearRequirement != 'none':
                 required_year = pYearRequirement.split(" ")[0].lower()
@@ -508,6 +508,7 @@ def application_admin():
         for field in row:
             view_html += '<td>\t{}<td>\n'.format(field)
         view_html += '</tr>\n'
+    view_html += '<table>''
     #for item in cursor.fetchall():
     #    html = '<\n>'
     #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
