@@ -545,13 +545,12 @@ def application_report_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-    #select projectName, (count(projectName)/2), (count(status = 'accepted')*100/count(projectName)), group_concat(distinct sub.majorName) as 'Popular Majors'
+    #select projectName, (count(projectName)/2), (count(status = 'accepted')*100/count(projectName)), 'Popular Majors'
     #from
-    #(select majorName from user,applies_for
-    #   where applies_for.studentUsername = user.username
-    #   group by majorname order by count(majorName) desc limit 3)sub,
+    #(select projectName, substring_index(group_concat(majorName separator '/'), '/', 3) as 'Popular Majors' from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub,
     #   applies_for, user
-    #where user.username = applies_for.studentUsername group by projectName;
+    #where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName group by projectName;
+    #select applies_for.projectName, (count(applies_for.projectName)), (count(status = 'accepted')*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator '/'), '/', 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName group by applies_for.projectName;
     view_html = ''
     view_html += '<table>'
     view_html += '<tr> <th>Project Name</th> <th></th><th># of Applicants</th> <th></th><th>Acceptance Rate</th><th></th> <th>Top 3 Majors</th><th></th></tr>'
