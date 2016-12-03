@@ -211,8 +211,11 @@ def main_student():
         print(search_query)
         cursor.execute(search_query)
         for item in cursor.fetchall():
-            print(item)
-            table_html += '<tr><td>{}</td><td>{}</td></tr>'.format(item[0],item[1])
+            # print(item)
+            if item[1] == 'Course':
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course=item[0]), item[1])
+            else:
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project=item[0]), item[1])
     else:
         flash_errors(form)
 
@@ -292,8 +295,8 @@ def my_application_student():
     return render_template('student/my_application_student.html', title='My Application', table_html=table_html)
 
 
-@app.route('/project-student', methods=['GET', 'POST'])
-def project_student():
+@app.route('/project-student/<project>', methods=['GET', 'POST'])
+def project_student(project):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -305,7 +308,7 @@ def project_student():
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Troll'
+    project_name = 'Dragon'
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
@@ -420,8 +423,8 @@ def project_student():
         form=form)
 
 
-@app.route('/course-student', methods=['GET', 'POST'])
-def course_student():
+@app.route('/course-student/<course>', methods=['GET', 'POST'])
+def course_student(course):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -500,16 +503,14 @@ def application_admin():
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
+    view_html += '<tr> <th>Student Name</th> <th></th><th>Project Name</th> <th></th><th>Date</th><th></th> <th>Status</th><th></th></tr>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
             view_html += '<td>\t{}<td>\n'.format(field)
         view_html += '</tr>\n'
     view_html += '<table>'
-    #for item in cursor.fetchall():
-    #    html = '<\n>'
-    #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
-    #    view_html += html
+
     return render_template('admin/application_admin.html', title='View Applications', view_html = view_html)
 
 
@@ -524,8 +525,19 @@ def pop_proj_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
+    fullTable = 'SELECT projectName, count(projectName) from applies_for group by projectName;'
+    cursor.execute(fullTable)
+    view_html = ''
+    view_html += '<table>'
+    view_html += '<tr> <th>Project Name</th> <th></th> <th>Applications</th><th></th></tr>'
+    for row in cursor.fetchall():
+        view_html += '<tr>\n'
+        for field in row:
+            view_html += '<td>\t{}<td>\n'.format(field)
+        view_html += '</tr>\n'
+    view_html += '<table>'
 
-    return render_template('admin/pop_proj_admin.html', title='View Popular Projects')
+    return render_template('admin/pop_proj_admin.html', title='View Popular Projects', view_html = view_html)
 
 
 @app.route('/application-report-admin', methods=['GET', 'POST'])
@@ -539,8 +551,23 @@ def application_report_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
-    return render_template('admin/application_report_admin.html', title='View Application Report')
+    #select projectName, (count(projectName)/2), (count(status = 'accepted')*100/count(projectName)), group_concat(distinct sub.majorName) as 'Popular Majors'
+    #from
+    #(select majorName from user,applies_for
+    #   where applies_for.studentUsername = user.username
+    #   group by majorname order by count(majorName) desc limit 3)sub,
+    #   applies_for, user
+    #where user.username = applies_for.studentUsername group by projectName;
+    view_html = ''
+    view_html += '<table>'
+    view_html += '<tr> <th>Project Name</th> <th></th><th># of Applicants</th> <th></th><th>Acceptance Rate</th><th></th> <th>Top 3 Majors</th><th></th></tr>'
+    for row in cursor.fetchall():
+        view_html += '<tr>\n'
+        for field in row:
+            view_html += '<td>\t{}<td>\n'.format(field)
+        view_html += '</tr>\n'
+    view_html += '<table>'
+    return render_template('admin/application_report_admin.html', title='View Application Report', view_html = view_html)
 
 
 @app.route('/add-project-admin', methods=['GET', 'POST'])

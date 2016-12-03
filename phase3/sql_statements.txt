@@ -1,34 +1,45 @@
--- Team 75
--- Credentials
+Team 75 SQL Queries
+
+**** Credentials ****
 SELECT * FROM user WHERE username = 'walter' AND password = 'white';
 
--- STUDENT
--- Make Account
+STUDENT FUNCTIONS:
+
+**** Make Account ****
 SELECT * FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
 INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gatech.edu')
 
--- Filter/Search
+**** Filter/Search ****
 
--- Edit Profile
+**** Edit Profile ****
 
--- View Applications
+**** View Applications ****
 
--- View Project
+**** View Project ****
+SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name = project_name
+SELECT categoryName FROM project_category WHERE projectName = project_name
+SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = project_name
 
--- Apply Project
+**** Apply Project ****
+SELECT status FROM applies_for WHERE studentUsername = username AND projectName = project_name
+SELECT year FROM user WHERE username = username
+SELECT majorName FROM user WHERE username = username
+SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = username
+INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, project_name, "pending")
 
--- View Course
+**** View Course ****
 
--- ADMIN
--- View Applications
+ADMIN FUNCTIONS:
 
--- View Popular Project Report
+**** View Applications ****
 
--- View Application Report
+**** View Popular Project Report ****
 
--- Add Project
+**** View Application Report ****
 
--- Add Course
+**** Add Project ****
+
+**** Add Course ****
 SELECT * FROM course WHERE courseNumber='CS 4400' OR name='Databases'
 INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('qqq 111', 'qqq - the real qqq', 'Q', 'QQ', 'Community', 432)
 INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'computing for good')
