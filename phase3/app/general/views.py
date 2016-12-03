@@ -213,9 +213,10 @@ def main_student():
         for item in cursor.fetchall():
             # print(item)
             if item[1] == 'Course':
-                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course=item[0]), item[1])
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course_name=item[0]), item[1])
+                print(item[0])
             else:
-                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project=item[0]), item[1])
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project_name=item[0]), item[1])
     else:
         flash_errors(form)
 
@@ -295,8 +296,8 @@ def my_application_student():
     return render_template('student/my_application_student.html', title='My Application', table_html=table_html)
 
 
-@app.route('/project-student/<project>', methods=['GET', 'POST'])
-def project_student(project):
+@app.route('/project-student/<path:project_name>', methods=['GET', 'POST'])
+def project_student(project_name):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -308,7 +309,6 @@ def project_student(project):
     # Code after this comment
     form = ProjectForm()
 
-    project_name = project
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
@@ -423,8 +423,8 @@ def project_student(project):
         form=form)
 
 
-@app.route('/course-student/<course>', methods=['GET', 'POST'])
-def course_student(course):
+@app.route('/course-student/<path:course_name>', methods=['GET', 'POST'])
+def course_student(course_name):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -435,7 +435,10 @@ def course_student(course):
         return redirect(url_for('login'))
     # Code after this comment
 
-    course_number = course
+    query_course_number = 'SELECT courseNumber FROM course WHERE name = \'{}\''.format(course_name)
+    cursor.execute(query_course_number)
+
+    course_number = cursor.fetchall()[0][0]
     query_course = 'SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = \'{}\';'.format(course_number)
     cursor.execute(query_course)
     res_course = cursor.fetchall()
