@@ -170,46 +170,52 @@ def main_student():
                         proj_query += 'and '
                     proj_query += 'name like \'%{}%\' '.format(title)
             proj_query += ')'
-        #Course Query
+        #Course Query - only if major and year are not specified
         course_query = ''
-        if project_or_course == 'Course' or project_or_course == 'Both':
+        if (project_or_course == 'Course' or project_or_course == 'Both') and (len(major) == 0 and len(year) == 0):
             course_query += "(select name, 'Course' as type from course c "
             #Join
             if len(cat_result) > 0:
                 course_query += "join course_category cc on c.courseNumber = cc.courseNumber "
-            #Conditionals - only if major and year are not specified
-            if len(major) == 0 and len(year) == 0:
-                if len(designation) > 0 or len(cat_result) > 0 or len(title) > 0:
-                    course_query += "where "
-                    #Category Conditional
+            #Conditionals
+            if len(designation) > 0 or len(cat_result) > 0 or len(title) > 0:
+                course_query += "where "
+                #Category Conditional
+                if len(cat_result) > 0:
+                    course_query += '('
+                    for i in range(len(cat_result) - 1):
+                        course_query += 'cc.categoryName = \'{}\' or '.format(cat_result[i])
+                    course_query += 'cc.categoryName = \'{}\' )'.format(cat_result[len(cat_result)-1])
+                #Designation Conditional
+                if len(designation) > 0:
                     if len(cat_result) > 0:
-                        course_query += '('
-                        for i in range(len(cat_result) - 1):
-                            course_query += 'cc.categoryName = \'{}\' or '.format(cat_result[i])
-                        course_query += 'cc.categoryName = \'{}\' )'.format(cat_result[len(cat_result)-1])
-                    #Designation Conditional
+                        course_query += 'and '
+                    course_query += 'c.designation = \'{}\' '.format(designation)
+                if len(title):
                     if len(designation) > 0:
-                        if len(cat_result) > 0:
-                            course_query += 'and '
-                        course_query += 'c.designation = \'{}\' '.format(designation)
-                    if len(title):
-                        if len(designation) > 0:
-                            course_query += 'and '
-                        course_query += 'name like \'%{}%\' '.format(title)
+                        course_query += 'and '
+                    course_query += 'name like \'%{}%\' '.format(title)
             course_query += ')'
         search_query = ''
         if project_or_course == 'Both':
-            search_query += proj_query + ' union ' + course_query
+            if len(major) > 0 or len(year) > 0:
+                search_query += proj_query
+            else:
+                search_query += proj_query + ' union ' + course_query
         elif project_or_course == 'Project':
             search_query += proj_query
         else:
-            search_query += course_query
+            if len(major) == 0 or len(year) == 0:
+                search_query += course_query
         search_query += 'order by name;'
         print(search_query)
         cursor.execute(search_query)
         for item in cursor.fetchall():
-            print(item)
-            table_html += '<tr><td>{}</td><td>{}</td></tr>'.format(item[0],item[1])
+            # print(item)
+            if item[1] == 'Course':
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course=item[0]), item[1])
+            else:
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project=item[0]), item[1])
     else:
         flash_errors(form)
 
@@ -289,8 +295,8 @@ def my_application_student():
     return render_template('student/my_application_student.html', title='My Application', table_html=table_html)
 
 
-@app.route('/project-student', methods=['GET', 'POST'])
-def project_student():
+@app.route('/project-student/<project>', methods=['GET', 'POST'])
+def project_student(project):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -302,7 +308,7 @@ def project_student():
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Dragon'
+    project_name = project
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
@@ -417,8 +423,8 @@ def project_student():
         form=form)
 
 
-@app.route('/course-student', methods=['GET', 'POST'])
-def course_student():
+@app.route('/course-student/<course>', methods=['GET', 'POST'])
+def course_student(course):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -429,7 +435,7 @@ def course_student():
         return redirect(url_for('login'))
     # Code after this comment
 
-    course_number = 'CS 3600'
+    course_number = course
     query_course = 'SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = \'{}\';'.format(course_number)
     cursor.execute(query_course)
     res_course = cursor.fetchall()
