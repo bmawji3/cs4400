@@ -122,6 +122,7 @@ def main_student():
     # Searching
     if form.validate_on_submit():
         major = form.major.data
+        dept = ''
         dept_query = "select deptName from major where majorName = \'{}\'".format(major)
         cursor.execute(dept_query)
         if len(major) > 0:
@@ -158,17 +159,7 @@ def main_student():
                 if len(major) > 0:
                     if len(designation) > 0 or len(cat_result):
                         proj_query += 'and '
-                    req_major = ''
-                    req_dept = ''
-                    if major == 'Computer Science':
-                        req_major = 'CS'
-                        req_dept = 'COC'
-                    elif dept == 'College of Design':
-                        req_dept = 'COD'
-                    else:
-                        req_major = major
-                        req_dept = dept
-                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(req_major, req_dept)
+                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(major, dept)
                     proj_query += ' or (pr.pMajorRequirement = \'none\' and pr.pDeptRequirement = \'none\')) '
                 if len(year):
                     if len(major) > 0 or len(designation) > 0 or len(cat_result):
@@ -373,7 +364,7 @@ def project_student():
 
             if pMajorRequirement == 'none' and pDeptRequirement == 'none':
                 satisfiesMajorRequirement = 1
-                satisfiesDepartmentRequirement = 1 
+                satisfiesDepartmentRequirement = 1
 
             if pYearRequirement != 'none':
                 required_year = pYearRequirement[:pYearRequirement.index(' students')].lower()
@@ -502,11 +493,13 @@ def application_admin():
     fullTable = 'SELECT * from applies_for;'
     cursor.execute(fullTable)
     view_html = ''
+    view_html += '<table>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
-            view_html += '\t{}\n'.format(field)
+            view_html += '<td>\t{}<td>\n'.format(field)
         view_html += '</tr>\n'
+    view_html += '<table>'
     #for item in cursor.fetchall():
     #    html = '<\n>'
     #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
@@ -567,7 +560,7 @@ def add_project_admin():
         majorReqList.append((item[0], item[0]))
     majorReqList.append(('none', 'none'))
     yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('none', 'none')]
-    deptReqList = [('COC students only', 'COC students only'), ('Liberal Arts students only', 'Liberal Arts students only'), ('Business students only', 'Business students only'), ('Design students only', 'Design students only'), ('Engineering students only', 'Engineering students only'), ('Science students only', 'Science students only'), ('none', 'none')]
+    deptReqList = [('College of Computing students only', 'College of Computing students only'), ('Ivan Allen College of Liberal Arts students only', 'Ivan Allen College of Liberal Arts students only'), ('Scheller School of Business students only', 'Scheller School of Business students only'), ('College of Design students only', 'College of Design students only'), ('College of Engineering students only', 'College of Engineering students only'), ('College of Science students only', 'College of Science students only'), ('none', 'none')]
 
     cursor.execute(get_designation)
     for item in cursor.fetchall():
@@ -599,7 +592,7 @@ def add_project_admin():
         check_query = 'SELECT name FROM project WHERE courseNumber=\'{}\''.format(name)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(name, estNum, description, advisorFName, advisorLName, designation)
             cursor.execute(insert_query)
             cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES (\'{}\', \'{}\', \'{}\', \'{}\')'.format(name, yearRequirements, deptRequirements, majorRequirements))
             for c in cat:
