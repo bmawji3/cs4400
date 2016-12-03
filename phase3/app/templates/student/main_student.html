@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
+    <script type="text/javascript">
+        var categories = [];
+        function myfunc() {
+            var inputs = document.getElementsByTagName("input");
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].type == "checkbox") {
+                    if (inputs[i].checked) {
+                        categories.push(inputs[i].value);
+                    }
+                }
+            }
+            $.ajax({
+                url: "{{url_for('test_search')}}",
+                type: "POST",
+                data: JSON.stringify({cat_results: categories}),
+                contentType: "application/json; charset=utf-8",
+                success: function(data) { console.log(data); }
+            });
+        }
+    </script>
     <h1>Main Page</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
@@ -8,8 +28,8 @@
             {{ form.title(size=40) }}<br>
         </p>
         <p>
-            {{ form.category.label }}:<br>
-            {{ form.category() }}<br>
+            <label for="category">Category</label>:<br>
+            {{ category_html | safe }}
         </p>
         <p>
             {{ form.designation.label }}:<br>
@@ -24,17 +44,8 @@
             {{ form.year() }}<br>
         </p>
         <p>
-            {{ form.project.label }}:<br>
-            {{ form.project(size=5) }}<br>
+            {{ form.choice(size=5) }}<br>
         </p>
-        <p>
-            {{ form.course.label }}:<br>
-            {{ form.course(size=5) }}<br>
-        </p>
-        <p>
-            <b>
-            </b>
-        </p>
-        <p><input type="submit" value="Apply Filter"></p>
+        <p><input type="submit" value="Apply Filter" onclick="myfunc()"></p>
     </form>
 {% endblock %}

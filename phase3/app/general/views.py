@@ -98,21 +98,21 @@ def main_student():
     get_categories = 'SELECT name FROM category;'
     get_majors = 'SELECT majorName FROM major;'
     get_desigs = 'SELECT name FROM designation;'
-    category_list = []
     desig_list = []
     major_list = []
     year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
+    category_html = ''
     # Setting the drop down values
     cursor.execute(get_categories)
     for item in cursor.fetchall():
-        category_list.append((item[0], item[0]))
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
     cursor.execute(get_majors)
     for item in cursor.fetchall():
         major_list.append((item[0], item[0]))
     cursor.execute(get_desigs)
     for item in cursor.fetchall():
         desig_list.append((item[0], item[0]))
-    form.category.choices = category_list
     form.designation.choices = desig_list
     form.major.choices = major_list
     form.year.choices = year_list
@@ -121,17 +121,14 @@ def main_student():
         major = form.major.data
         year = form.year.data
         designation = form.designation.data
-        category = form.category.data
         title_search = form.title.data
-        is_project = form.project.data
-        is_course = form.course.data
-        if is_project:
-            query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
-            print(query)
+        print(cat_result)
+        query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
+        print(query)
     else:
         flash_errors(form)
 
-    return render_template('student/main_student.html', title='Main', form=form)
+    return render_template('student/main_student.html', title='Main', form=form, category_html=category_html)
 
 
 @app.route('/me-student', methods=['GET', 'POST'])
@@ -170,8 +167,10 @@ def edit_student():
         major_list.append((item[0], item[0]))
     form.new_major.choices = major_list
     form.new_year.choices = year_list
+    dept = 'N/A'
     # Editing the profile
     if form.validate_on_submit():
+        # check that length of cat_result > 0
         major = form.new_major.data
         year = form.new_year.data
         get_department = 'SELECT deptName from major where majorName = \'{}\''.format(major)
@@ -501,6 +500,14 @@ def test():
     tnum = data['nums']
     return ''
 
+cat_result = ''
+@app.route('/test_search', methods=['GET', 'POST'])
+def test_search():
+    data = request.get_json()
+    # print("Data:",data)
+    global cat_result
+    cat_result = data['cat_results']
+    return ''
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
