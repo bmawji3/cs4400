@@ -214,7 +214,7 @@ def project_student():
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Thestral'
+    project_name = 'Troll'
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
@@ -240,21 +240,29 @@ def project_student():
         categories = categories[:-2]
 
     requirements = ''
-    query_requirements = 'SELECT pRequirement FROM project_requirements WHERE pName = \'{}\';'.format(project_name)
+    query_requirements = 'SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = \'{}\';'.format(project_name)
     cursor.execute(query_requirements)
     res_requirements = cursor.fetchall()
 
+    pYearRequirement = res_requirements[0][0]
+    pDeptRequirement = res_requirements[0][1]
+    pMajorRequirement = res_requirements[0][2]
+
     hasRequirements = 0
-    for requirement in res_requirements:
-        requirements += requirement[0] + '; ';
-        hasRequirements = 1
+    for requirement_tuple in res_requirements:
+        for requirement in requirement_tuple:
+            if requirement != 'none':
+                requirements += requirement + '; ';
+                hasRequirements = 1
 
     if hasRequirements:
         requirements = requirements[:-2]
+    else:
+        requirements = 'none'
 
     if form.validate_on_submit():
-        student_username = session['username']
-        query_application = 'SELECT status FROM applies_for WHERE studentUsername = \'{}\' AND projectName = \'{}\';'.format(student_username, project_name)
+        username = session['username']
+        query_application = 'SELECT status FROM applies_for WHERE studentUsername = \'{}\' AND projectName = \'{}\';'.format(username, project_name)
         cursor.execute(query_application)
         if cursor.rowcount:
             status = cursor.fetchall()[0][0]
@@ -265,7 +273,44 @@ def project_student():
             elif status == 'pending':
                 flash('Your application is pending -- hang tight!')
         else:
-            flash('in progress')
+            satisfiesYearRequirement = 1
+            satisfiesMajorRequirement = 0
+            satisfiesDepartmentRequirement = 0
+
+            if pMajorRequirement == 'none' and pDeptRequirement == 'none':
+                satisfiesMajorRequirement = 1
+                satisfiesDepartmentRequirement = 1 
+
+            if pYearRequirement != 'none':
+                required_year = pYearRequirement.split(" ")[0].lower()
+                query_year = 'SELECT year FROM user WHERE username = \'{}\''.format(username)
+                cursor.execute(query_year)
+                if required_year == cursor.fetchall()[0][0].lower():
+                    satisfiesYearRequirement = 1
+                else:
+                    satisfiesYearRequirement = 0
+
+            if pMajorRequirement != 'none':
+                required_major = pMajorRequirement.split(" ")[0].lower()
+                query_major = 'SELECT majorName FROM user WHERE username = \'{}\''.format(username)
+                cursor.execute(query_major)
+                if required_major == cursor.fetchall()[0][0].lower():
+                    satisfiesMajorRequirement = 1
+
+            if pDeptRequirement != 'none':
+                required_dept = pDeptRequirement.split(" ")[0].lower()
+                query_dept = 'SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = \'{}\''.format(username)
+                cursor.execute(query_dept)
+                if required_dept == cursor.fetchall()[0][0].lower():
+                    satisfiesDepartmentRequirement = 1
+
+            if ((satisfiesMajorRequirement or satisfiesDepartmentRequirement) and satisfiesYearRequirement):
+                query_apply = 'INSERT INTO applies_for(studentUsername, projectName, status) VALUES (\'{}\', \'{}\', \'{}\')'.format(username, project_name, "pending")
+                cursor.execute(query_apply)
+                conn.commit()
+                flash('Thanks for applying! Your application has been received and will be reviewed in the next week.')
+            else:
+                flash('Sorry, you cannot apply because you don\'t meet the project\'s requirements.')
         #print(session['username'])
     else:
         flash_errors(form)
