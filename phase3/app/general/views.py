@@ -429,6 +429,34 @@ def add_project_admin():
         requirement_list.append(item[0])
     form.designation.choices = designation_list
     form.requirements.choices = requirement_list
+    if form.validate_on_submit():
+        if tnum == 0:
+            flash('Error in the Category field - This field is required.')
+            return redirect(url_for('add_course_admin'))
+        name = form.name.data
+        advisorFName = form.advisorFName.data
+        advisorLName = form.advisorLName.data
+        advisorEmail = form.advisorEmail.data
+        description = form.description.data
+        designation = form.designation.data
+        requirements = form.requirements.data
+        estNum = form.estNum.data
+        # queries
+        check_query = 'SELECT name FROM project WHERE courseNumber=\'{}\''.format(name)
+        result = cursor.execute(check_query)
+        if not result:
+            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            cursor.execute(insert_query)
+            for c in cat:
+                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
+                cursor.execute(insert_query_2)
+            conn.commit()
+            flash('Course has been inserted!')
+            return redirect(url_for('add_course_admin'))
+        else:
+            flash('Conflict with Course Number or Course Name!')
+    else:
+        flash_errors(form)
     return render_template('admin/add_project_admin.html', title='Add Project', form=form)
 
 
@@ -473,7 +501,7 @@ def add_course_admin():
         check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber=\'{}\' OR name=\'{}\''.format(cnum, cname)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents)
             cursor.execute(insert_query)
             for c in cat:
                 insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
