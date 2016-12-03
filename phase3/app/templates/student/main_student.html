@@ -20,6 +20,23 @@
             });
         }
     </script>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
     <h1>Main Page</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
@@ -48,4 +65,11 @@
         </p>
         <p><input type="submit" value="Apply Filter" onclick="myfunc()"></p>
     </form>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+        {{ table_html | safe }}
+    </table>
 {% endblock %}
