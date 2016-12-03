@@ -102,6 +102,7 @@ def main_student():
     major_list = []
     year_list = [('', ''), ('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
     category_html = ''
+    table_html = ''
     # Setting the drop down values and adding default blank at the end of each list
     cursor.execute(get_categories)
     for item in cursor.fetchall():
@@ -214,10 +215,14 @@ def main_student():
             search_query += course_query
         search_query += 'order by name;'
         print(search_query)
+        cursor.execute(search_query)
+        for item in cursor.fetchall():
+            print(item)
+            table_html += '<tr><td>{}</td><td>{}</td></tr>'.format(item[0],item[1])
     else:
         flash_errors(form)
 
-    return render_template('student/main_student.html', title='Main', form=form, category_html=category_html)
+    return render_template('student/main_student.html', title='Main', form=form, category_html=category_html, table_html=table_html)
 
 
 @app.route('/me-student', methods=['GET', 'POST'])
