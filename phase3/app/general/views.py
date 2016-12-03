@@ -416,10 +416,13 @@ def add_project_admin():
     get_category = 'SELECT name FROM category;'
     designation_list = []
     category_html = ''
+    get_majors = 'SELECT distinct majorName FROM major;'
+    cursor.execute(get_majors)
+    for item in cursor.fetchAll():
+        majorReqList.append(item[0], item[0])
     majorReqList = []
-
     yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('No Requirements', 'No Requirements')]
-    deptReqList = []
+    deptReqList = [('COC students only', 'COC students only'), ('Liberal Arts students only', 'Liberal Arts students only'), ('Business students only', 'Business students only'), ('Design students only', 'Design students only'), ('Engineering students only', 'Engineering students only'), ('Science students only', 'Science students only')]
 
     cursor.execute(get_designation)
     for item in cursor.fetchall():
