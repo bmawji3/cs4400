@@ -305,7 +305,7 @@ def project_student(project):
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Dragon'
+    project_name = project
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
@@ -432,7 +432,7 @@ def course_student(course):
         return redirect(url_for('login'))
     # Code after this comment
 
-    course_number = 'CS 3600'
+    course_number = course
     query_course = 'SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = \'{}\';'.format(course_number)
     cursor.execute(query_course)
     res_course = cursor.fetchall()
