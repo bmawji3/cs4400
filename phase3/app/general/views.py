@@ -455,7 +455,7 @@ def application_admin():
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
-            view_html += '\t{}\n'.format(field)
+            view_html += '<td>\t{}<td>\n'.format(field)
         view_html += '</tr>\n'
     #for item in cursor.fetchall():
     #    html = '<\n>'
