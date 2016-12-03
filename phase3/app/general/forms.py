@@ -27,7 +27,6 @@ class EditProfileForm(FlaskForm):
 
 class SearchClassProject(FlaskForm):
     title = StringField('Title')
-    category = SelectField('Category')
     designation = SelectField('Designation')
     major = SelectField('Major')
     year = SelectField('Year')

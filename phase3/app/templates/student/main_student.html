@@ -28,8 +28,8 @@
             {{ form.title(size=40) }}<br>
         </p>
         <p>
-            {{ form.category.label }}:<br>
-            {{ form.category() }}<br>
+            <label for="category">Category</label>:<br>
+            {{ category_html | safe }}
         </p>
         <p>
             {{ form.designation.label }}:<br>
