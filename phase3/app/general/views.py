@@ -506,13 +506,15 @@ def application_admin():
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
-    view_html += '<tr> <th>Student Name</th> <th></th><th>Project Name</th> <th></th><th>Date</th><th></th> <th>Status</th><th></th><th>Accept</th><th></th></tr>'
+    view_html += '<tr> <th>Student Name</th><th>Project Name</th><th>Date</th><th>Status</th><th>Accept</th></tr>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
-            view_html += '<td>\t{}<td>\n'.format(field)
-        view_html += '<button name = "Accept" onclick = "">'
-        view_html += '<button name = "Reject" onclick = "">'
+            view_html += '<td>\t{}</td>\n'.format(field)
+        view_html += '<td>'
+        view_html += '<button name = "Accept" onclick = "" class = "btn"> Accept </button>    '
+        view_html += '<button name = "Reject" onclick = "" class = "btn"> Reject </button>'
+        view_html += '</td>'
         view_html += '</tr>\n'
     view_html += '<table>'
 
@@ -534,11 +536,11 @@ def pop_proj_admin():
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
-    view_html += '<tr> <th>Project Name</th> <th></th> <th>Applications</th><th></th></tr>'
+    view_html += '<tr> <th>Project Name</th> <th>Applications</th></tr>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
-            view_html += '<td>\t{}<td>\n'.format(field)
+            view_html += '<td>\t{}</td>\n'.format(field)
         view_html += '</tr>\n'
     view_html += '<table>'
 
@@ -561,11 +563,11 @@ def application_report_admin():
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
-    view_html += '<tr> <th>Project Name</th> <th></th><th># of Applicants</th> <th></th><th>Acceptance Rate</th><th></th> <th>Top 3 Majors</th><th></th></tr>'
+    view_html += '<tr> <th>Project Name</th> <th># of Applicants</th><th>Acceptance Rate</th> <th>Top 3 Majors</th></tr>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
-            view_html += '<td>\t{}<td>\n'.format(field)
+            view_html += '<td>\t{}</td>\n'.format(field)
         view_html += '</tr>\n'
     view_html += '<table>'
     return render_template('admin/application_report_admin.html', title='View Application Report', view_html = view_html)
