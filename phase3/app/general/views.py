@@ -122,6 +122,7 @@ def main_student():
     # Searching
     if form.validate_on_submit():
         major = form.major.data
+        dept = ''
         dept_query = "select deptName from major where majorName = \'{}\'".format(major)
         cursor.execute(dept_query)
         if len(major) > 0:
@@ -158,17 +159,7 @@ def main_student():
                 if len(major) > 0:
                     if len(designation) > 0 or len(cat_result):
                         proj_query += 'and '
-                    req_major = ''
-                    req_dept = ''
-                    if major == 'Computer Science':
-                        req_major = 'CS'
-                        req_dept = 'COC'
-                    elif dept == 'College of Design':
-                        req_dept = 'COD'
-                    else:
-                        req_major = major
-                        req_dept = dept
-                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(req_major, req_dept)
+                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(major, dept)
                     proj_query += ' or (pr.pMajorRequirement = \'none\' and pr.pDeptRequirement = \'none\')) '
                 if len(year):
                     if len(major) > 0 or len(designation) > 0 or len(cat_result):
