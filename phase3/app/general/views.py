@@ -122,6 +122,7 @@ def main_student():
     # Searching
     if form.validate_on_submit():
         major = form.major.data
+        dept = ''
         dept_query = "select deptName from major where majorName = \'{}\'".format(major)
         cursor.execute(dept_query)
         if len(major) > 0:
@@ -158,17 +159,7 @@ def main_student():
                 if len(major) > 0:
                     if len(designation) > 0 or len(cat_result):
                         proj_query += 'and '
-                    req_major = ''
-                    req_dept = ''
-                    if major == 'Computer Science':
-                        req_major = 'CS'
-                        req_dept = 'COC'
-                    elif dept == 'College of Design':
-                        req_dept = 'COD'
-                    else:
-                        req_major = major
-                        req_dept = dept
-                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(req_major, req_dept)
+                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(major, dept)
                     proj_query += ' or (pr.pMajorRequirement = \'none\' and pr.pDeptRequirement = \'none\')) '
                 if len(year):
                     if len(major) > 0 or len(designation) > 0 or len(cat_result):
@@ -290,9 +281,12 @@ def my_application_student():
     else:
         flash('You are not logged in!')
         return redirect(url_for('login'))
-    # Code after this comment
-
-    return render_template('student/my_application_student.html', title='My Application')
+    table_html = ''
+    query = 'SELECT date,projectName,status from applies_for where studentUsername = \'{}\''.format(session.get('username'))
+    cursor.execute(query)
+    for item in cursor.fetchall():
+        table_html += '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(item[0],item[1],item[2])
+    return render_template('student/my_application_student.html', title='My Application', table_html=table_html)
 
 
 @app.route('/project-student', methods=['GET', 'POST'])
@@ -308,7 +302,7 @@ def project_student():
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Troll'
+    project_name = 'Dragon'
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
@@ -376,7 +370,7 @@ def project_student():
                 satisfiesDepartmentRequirement = 1
 
             if pYearRequirement != 'none':
-                required_year = pYearRequirement.split(" ")[0].lower()
+                required_year = pYearRequirement[:pYearRequirement.index(' students')].lower()
                 query_year = 'SELECT year FROM user WHERE username = \'{}\''.format(username)
                 cursor.execute(query_year)
                 if required_year == cursor.fetchall()[0][0].lower():
@@ -385,14 +379,14 @@ def project_student():
                     satisfiesYearRequirement = 0
 
             if pMajorRequirement != 'none':
-                required_major = pMajorRequirement.split(" ")[0].lower()
+                required_major = pMajorRequirement[:pMajorRequirement.index(' students')].lower()
                 query_major = 'SELECT majorName FROM user WHERE username = \'{}\''.format(username)
                 cursor.execute(query_major)
                 if required_major == cursor.fetchall()[0][0].lower():
                     satisfiesMajorRequirement = 1
 
             if pDeptRequirement != 'none':
-                required_dept = pDeptRequirement.split(" ")[0].lower()
+                required_dept = pDeptRequirement[:pDeptRequirement.index(' students')].lower()
                 query_dept = 'SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = \'{}\''.format(username)
                 cursor.execute(query_dept)
                 if required_dept == cursor.fetchall()[0][0].lower():
