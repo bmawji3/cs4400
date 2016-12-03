@@ -299,7 +299,7 @@ def project_student():
     # Code after this comment
     form = ProjectForm()
 
-    project_name = 'Troll'
+    project_name = 'Dragon'
     query_project = 'SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name=\'{}\';'.format(project_name)
     cursor.execute(query_project)
     res_project = cursor.fetchall()
