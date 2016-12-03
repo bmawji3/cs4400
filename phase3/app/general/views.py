@@ -376,7 +376,7 @@ def project_student():
                 satisfiesDepartmentRequirement = 1 
 
             if pYearRequirement != 'none':
-                required_year = pYearRequirement.split(" ")[0].lower()
+                required_year = pYearRequirement[:pYearRequirement.index(' students')].lower()
                 query_year = 'SELECT year FROM user WHERE username = \'{}\''.format(username)
                 cursor.execute(query_year)
                 if required_year == cursor.fetchall()[0][0].lower():
@@ -385,14 +385,14 @@ def project_student():
                     satisfiesYearRequirement = 0
 
             if pMajorRequirement != 'none':
-                required_major = pMajorRequirement.split(" ")[0].lower()
+                required_major = pMajorRequirement[:pMajorRequirement.index(' students')].lower()
                 query_major = 'SELECT majorName FROM user WHERE username = \'{}\''.format(username)
                 cursor.execute(query_major)
                 if required_major == cursor.fetchall()[0][0].lower():
                     satisfiesMajorRequirement = 1
 
             if pDeptRequirement != 'none':
-                required_dept = pDeptRequirement.split(" ")[0].lower()
+                required_dept = pDeptRequirement[:pDeptRequirement.index(' students')].lower()
                 query_dept = 'SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = \'{}\''.format(username)
                 cursor.execute(query_dept)
                 if required_dept == cursor.fetchall()[0][0].lower():
