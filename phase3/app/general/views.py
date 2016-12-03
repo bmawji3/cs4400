@@ -453,15 +453,15 @@ def application_admin():
     cursor.execute(fullTable)
     view_html = ''
     for row in fullTable:
-        view_html += '<tr>'
+        view_html += '<tr>\n'
         for field in row:
-            view_html += '<tb>{}</tb>'.format(field[0])
-        view_html += '</tr>'
+            view_html += '\t<tb>{}</tb>\n'.format(field[0])
+        view_html += '</tr>\n'
     #for item in cursor.fetchall():
     #    html = '<\n>'
     #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
     #    view_html += html
-    return render_template('admin/application_admin.html', title='View Applications')
+    return render_template('admin/application_admin.html', title='View Applications', view_html = view_html)
 
 
 @app.route('/pop-proj-admin', methods=['GET', 'POST'])
