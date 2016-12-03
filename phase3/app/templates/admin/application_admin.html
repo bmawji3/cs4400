@@ -2,7 +2,7 @@
 {% block content %}
     <h1>Application</h1>
     <p>
-        {{ view_html | safe }}
+        {{ view_html}}
     </p>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
 {% endblock %}

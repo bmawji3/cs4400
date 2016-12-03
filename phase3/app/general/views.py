@@ -452,10 +452,10 @@ def application_admin():
     fullTable = 'SELECT * from applies_for;'
     cursor.execute(fullTable)
     view_html = ''
-    for row in fullTable:
+    for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
-            view_html += '\t<tb>{}</tb>\n'.format(field[0])
+            view_html += '\t{}\n'.format(field)
         view_html += '</tr>\n'
     #for item in cursor.fetchall():
     #    html = '<\n>'
