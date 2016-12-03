@@ -416,7 +416,11 @@ def add_project_admin():
     get_category = 'SELECT name FROM category;'
     designation_list = []
     category_html = ''
-    requirement_list = []
+    majorReqList = []
+
+    yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('No Requirements', 'No Requirements')]
+    deptReqList = []
+
     cursor.execute(get_designation)
     for item in cursor.fetchall():
         designation_list.append((item[0], item[0]))
@@ -428,7 +432,7 @@ def add_project_admin():
     for item in cursor.fetchall():
         requirement_list.append(item[0])
     form.designation.choices = designation_list
-    form.requirements.choices = requirement_list
+    form.yearRequirements.choices = yearReqList
     if form.validate_on_submit():
         if tnum == 0:
             flash('Error in the Category field - This field is required.')
