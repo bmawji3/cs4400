@@ -59,9 +59,16 @@
             {{ form.advisorEmail.label }}:<br>
             {{ form.advisorEmail(size=40) }}<br>
         </p>
+            {{ form.majorRequirement.label }}:<br>
+            {{ form.majorRequirement() }}<br>
         <p>
-            requirements here
         </p>
+            {{ form.yearRequirement.label }}:<br>
+            {{ form.yearRequirement() }}<br>
+        </p>
+            {{ form.deptRequirement.label }}:<br>
+            {{ form.deptRequirement() }}<br>
+        <p>
         <p><input type="submit" value="Submit" onclick="myfunc()"></p>
     </form>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>

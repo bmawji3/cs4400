@@ -419,10 +419,11 @@ def add_project_admin():
     get_majors = 'SELECT distinct majorName FROM major;'
     cursor.execute(get_majors)
     majorReqList = []
-    for item in cursor.fetchAll():
-        majorReqList.append(item[0], item[0])
-    yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('No Requirements', 'No Requirements')]
-    deptReqList = [('COC students only', 'COC students only'), ('Liberal Arts students only', 'Liberal Arts students only'), ('Business students only', 'Business students only'), ('Design students only', 'Design students only'), ('Engineering students only', 'Engineering students only'), ('Science students only', 'Science students only')]
+    for item in cursor.fetchall():
+        majorReqList.append((item[0], item[0]))
+    majorReqList.append(('none', 'none'))
+    yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('none', 'none')]
+    deptReqList = [('COC students only', 'COC students only'), ('Liberal Arts students only', 'Liberal Arts students only'), ('Business students only', 'Business students only'), ('Design students only', 'Design students only'), ('Engineering students only', 'Engineering students only'), ('Science students only', 'Science students only'), ('none', 'none')]
 
     cursor.execute(get_designation)
     for item in cursor.fetchall():
@@ -431,13 +432,10 @@ def add_project_admin():
     for item in cursor.fetchall():
         html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
-    cursor.execute('SELECT * from project_requirements;')
-    for item in cursor.fetchall():
-        requirement_list.append(item[0])
     form.designation.choices = designation_list
-    form.yearRequirements.choices = yearReqList
-    form.majorRequirements.choices = majorReqList
-    form.deptRequirements.choices = deptReqList
+    form.yearRequirement.choices = yearReqList
+    form.majorRequirement.choices = majorReqList
+    form.deptRequirement.choices = deptReqList
     if form.validate_on_submit():
         if tnum == 0:
             flash('Error in the Category field - This field is required.')
@@ -448,9 +446,9 @@ def add_project_admin():
         advisorEmail = form.advisorEmail.data
         description = form.description.data
         designation = form.designation.data
-        majorRequirements = form.majorRequirements.data
-        yearRequirements = form.yearRequirements.data
-        deptRequirements = form.deptRequirements.data
+        majorRequirements = form.majorRequirement.data
+        yearRequirements = form.yearRequirement.data
+        deptRequirements = form.deptRequirement.data
         estNum = form.estNum.data
 
         # queries
@@ -470,7 +468,7 @@ def add_project_admin():
             flash('Conflict with Project Name!')
     else:
         flash_errors(form)
-    return render_template('admin/add_project_admin.html', title='Add Project', form=form)
+    return render_template('admin/add_project_admin.html', title='Add Project', form=form, category_html=category_html)
 
 
 @app.route('/add-course-admin', methods=['GET', 'POST'])
