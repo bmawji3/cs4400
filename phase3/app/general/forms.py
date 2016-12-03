@@ -41,7 +41,7 @@ class AddProjectForm(FlaskForm):
     designation = SelectField('Designation')
     majorRequirement = SelectField('Major Requirement')
     yearRequirement = SelectField('Year Requirement')
-    departmentRequirement = SelectField('Department Requirement')
+    deptRequirement = SelectField('Department Requirement')
 
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 

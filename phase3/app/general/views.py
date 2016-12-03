@@ -418,9 +418,9 @@ def add_project_admin():
     category_html = ''
     get_majors = 'SELECT distinct majorName FROM major;'
     cursor.execute(get_majors)
+    majorReqList = []
     for item in cursor.fetchAll():
         majorReqList.append(item[0], item[0])
-    majorReqList = []
     yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('No Requirements', 'No Requirements')]
     deptReqList = [('COC students only', 'COC students only'), ('Liberal Arts students only', 'Liberal Arts students only'), ('Business students only', 'Business students only'), ('Design students only', 'Design students only'), ('Engineering students only', 'Engineering students only'), ('Science students only', 'Science students only')]
 
@@ -436,6 +436,8 @@ def add_project_admin():
         requirement_list.append(item[0])
     form.designation.choices = designation_list
     form.yearRequirements.choices = yearReqList
+    form.majorRequirements.choices = majorReqList
+    form.deptRequirements.choices = deptReqList
     if form.validate_on_submit():
         if tnum == 0:
             flash('Error in the Category field - This field is required.')
@@ -446,22 +448,26 @@ def add_project_admin():
         advisorEmail = form.advisorEmail.data
         description = form.description.data
         designation = form.designation.data
-        requirements = form.requirements.data
+        majorRequirements = form.majorRequirements.data
+        yearRequirements = form.yearRequirements.data
+        deptRequirements = form.deptRequirements.data
         estNum = form.estNum.data
+
         # queries
         check_query = 'SELECT name FROM project WHERE courseNumber=\'{}\''.format(name)
         result = cursor.execute(check_query)
         if not result:
             insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
             cursor.execute(insert_query)
+            cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES (\'{}\', \'{}\', \'{}\', \'{}\')'.format(name, yearRequirements, deptRequirements, majorRequirements))
             for c in cat:
-                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
+                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES (\'{}\', \'{}\')'.format(name, c)
                 cursor.execute(insert_query_2)
             conn.commit()
-            flash('Course has been inserted!')
-            return redirect(url_for('add_course_admin'))
+            flash('Project has been added!')
+            return redirect(url_for('add_project_admin'))
         else:
-            flash('Conflict with Course Number or Course Name!')
+            flash('Conflict with Project Name!')
     else:
         flash_errors(form)
     return render_template('admin/add_project_admin.html', title='Add Project', form=form)
