@@ -7,25 +7,56 @@ STUDENT FUNCTIONS:
 
 **** Make Account ****
 SELECT * FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
-INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gatech.edu')
+INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gatech.edu');
 
 **** Filter/Search ****
 
+SELECT name FROM category ORDER BY name;
+SELECT majorName FROM major ORDER BY majorName;
+SELECT name FROM designation ORDER BY name;
+select deptName from major where majorName = selectMajor;
+(select name, 'Project' as type
+from project p 
+join project_category pc on p.name = pc.projectName
+join project_requirements pr on pr.pName = p.name 
+where (pc.categoryName = category1 or pc.categoryName = category2) 
+    and p.desigName = designation
+    and (
+            (pr.pMajorRequirement like '%major%' or pr.pDeptRequirement like '%depatrment%')
+         or (pr.pMajorRequirement = 'none' and pr.pDeptRequirement = 'none')
+         )
+    and (pr.pYearRequirement like '%class%' or pr.pYearRequirement = 'none')
+    and name like '%input%'
+)
+union
+(select name, "Course" as type
+from course c
+join course_category cc on c.courseNumber = cc.courseNumber
+where c.designation = designation
+    and (cc.categoryName = category1 or cc.categoryName = category2)
+    and name like '%input%'
+)
+order by name;
+
 **** Edit Profile ****
+SELECT majorName FROM major ORDER BY majorName;
+SELECT deptName from major where majorName = newMajorName;
+UPDATE user SET majorName = newMajorName, year = newYear WHERE username = userName;
 
 **** View Applications ****
+SELECT date,projectName,status from applies_for where studentUsername = userName;
 
 **** View Project ****
-SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name = project_name
-SELECT categoryName FROM project_category WHERE projectName = project_name
-SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = project_name
+SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name = project_name;
+SELECT categoryName FROM project_category WHERE projectName = project_name;
+SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = project_name;
 
 **** Apply Project ****
-SELECT status FROM applies_for WHERE studentUsername = username AND projectName = project_name
-SELECT year FROM user WHERE username = username
-SELECT majorName FROM user WHERE username = username
-SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = username
-INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, project_name, "pending")
+SELECT status FROM applies_for WHERE studentUsername = username AND projectName = project_name;
+SELECT year FROM user WHERE username = username;
+SELECT majorName FROM user WHERE username = username;
+SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = username;
+INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, project_name, "pending");
 
 **** View Course ****
 
@@ -40,7 +71,7 @@ ADMIN FUNCTIONS:
 **** Add Project ****
 
 **** Add Course ****
-SELECT * FROM course WHERE courseNumber='CS 4400' OR name='Databases'
-INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('qqq 111', 'qqq - the real qqq', 'Q', 'QQ', 'Community', 432)
-INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'computing for good')
-INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'urban development')
+SELECT * FROM course WHERE courseNumber='CS 4400' OR name='Databases';
+INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('qqq 111', 'qqq - the real qqq', 'Q', 'QQ', 'Community', 432);
+INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'computing for good');
+INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'urban development');

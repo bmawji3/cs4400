@@ -95,9 +95,9 @@ def main_student():
         return redirect(url_for('login'))
     form = SearchClassProject()
     # Queries to fill drop down
-    get_categories = 'SELECT name FROM category;'
-    get_majors = 'SELECT majorName FROM major;'
-    get_desigs = 'SELECT name FROM designation;'
+    get_categories = 'SELECT name FROM category ORDER BY name;'
+    get_majors = 'SELECT majorName FROM major ORDER BY majorName;'
+    get_desigs = 'SELECT name FROM designation ORDER BY name;'
     desig_list = []
     major_list = []
     year_list = [('', ''), ('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
@@ -109,13 +109,13 @@ def main_student():
         html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
     cursor.execute(get_majors)
+    major_list.append(('',''))
     for item in cursor.fetchall():
         major_list.append((item[0], item[0]))
-    major_list.append(('',''))
     cursor.execute(get_desigs)
+    desig_list.append(('',''))
     for item in cursor.fetchall():
         desig_list.append((item[0], item[0]))
-    desig_list.append(('',''))
     form.designation.choices = desig_list
     form.major.choices = major_list
     form.year.choices = year_list
@@ -249,7 +249,7 @@ def edit_student():
         return redirect(url_for('login'))
     form = EditProfileForm()
     # Queries to fill drop down
-    get_majors = 'SELECT majorName FROM major;'
+    get_majors = 'SELECT majorName FROM major ORDER BY majorName;'
     major_list = []
     dept = ''
     year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
