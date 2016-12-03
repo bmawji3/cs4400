@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SelectField, BooleanField
+from wtforms import StringField, IntegerField, SelectField, BooleanField, RadioField
 from wtforms.validators import InputRequired, EqualTo, Email
 
 class LoginForm(FlaskForm):
@@ -26,13 +26,11 @@ class EditProfileForm(FlaskForm):
     new_year = SelectField('Year')
 
 class SearchClassProject(FlaskForm):
-    title = StringField('Title', [InputRequired()])
-    category = SelectField('Category')
+    title = StringField('Title')
     designation = SelectField('Designation')
     major = SelectField('Major')
     year = SelectField('Year')
-    project = BooleanField('Project', default=False)
-    course = BooleanField('Course', default=False)
+    choice = RadioField(default='Both', choices=[('Project','Project'), ('Course','Course'), ('Both','Both')])
 
 class AddProjectForm(FlaskForm):
     name = StringField('Project Name', [InputRequired()])
@@ -41,9 +39,11 @@ class AddProjectForm(FlaskForm):
     advisorEmail = StringField('Advisor Email', [InputRequired(), Email()])
     description = StringField('Description', [InputRequired()])
     designation = SelectField('Designation')
-    requirements = SelectField('Requirements')
+    majorRequirement = SelectField('Major Requirement')
+    yearRequirement = SelectField('Year Requirement')
+    deptRequirement = SelectField('Department Requirement')
+
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 
 class ProjectForm(FlaskForm):
     name = StringField('Name')
-

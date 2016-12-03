@@ -98,21 +98,21 @@ def main_student():
     get_categories = 'SELECT name FROM category;'
     get_majors = 'SELECT majorName FROM major;'
     get_desigs = 'SELECT name FROM designation;'
-    category_list = []
     desig_list = []
     major_list = []
     year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
+    category_html = ''
     # Setting the drop down values
     cursor.execute(get_categories)
     for item in cursor.fetchall():
-        category_list.append((item[0], item[0]))
+        html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+        category_html += html
     cursor.execute(get_majors)
     for item in cursor.fetchall():
         major_list.append((item[0], item[0]))
     cursor.execute(get_desigs)
     for item in cursor.fetchall():
         desig_list.append((item[0], item[0]))
-    form.category.choices = category_list
     form.designation.choices = desig_list
     form.major.choices = major_list
     form.year.choices = year_list
@@ -121,17 +121,14 @@ def main_student():
         major = form.major.data
         year = form.year.data
         designation = form.designation.data
-        category = form.category.data
         title_search = form.title.data
-        is_project = form.project.data
-        is_course = form.course.data
-        if is_project:
-            query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
-            print(query)
+        print(cat_result)
+        query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
+        print(query)
     else:
         flash_errors(form)
 
-    return render_template('student/main_student.html', title='Main', form=form)
+    return render_template('student/main_student.html', title='Main', form=form, category_html=category_html)
 
 
 @app.route('/me-student', methods=['GET', 'POST'])
@@ -170,8 +167,10 @@ def edit_student():
         major_list.append((item[0], item[0]))
     form.new_major.choices = major_list
     form.new_year.choices = year_list
+    dept = 'N/A'
     # Editing the profile
     if form.validate_on_submit():
+        # check that length of cat_result > 0
         major = form.new_major.data
         year = form.new_year.data
         get_department = 'SELECT deptName from major where majorName = \'{}\''.format(major)
@@ -363,9 +362,11 @@ def application_admin():
     # Code after this comment
     displayedStuff = 'SELECT * from applies_for;'
     cursor.execute(displayedStuff)
-    for item in cursor.fetchall():
-        html = ''#'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
-        category_html += html
+    html = '<p1>Insert table here</p1>'
+    #for item in cursor.fetchall():
+    #    html = '<\n>'
+    #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+    #    view_html += html
     return render_template('admin/application_admin.html', title='View Applications')
 
 
@@ -415,6 +416,15 @@ def add_project_admin():
     get_category = 'SELECT name FROM category;'
     designation_list = []
     category_html = ''
+    get_majors = 'SELECT distinct majorName FROM major;'
+    cursor.execute(get_majors)
+    majorReqList = []
+    for item in cursor.fetchall():
+        majorReqList.append((item[0], item[0]))
+    majorReqList.append(('none', 'none'))
+    yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('none', 'none')]
+    deptReqList = [('COC students only', 'COC students only'), ('Liberal Arts students only', 'Liberal Arts students only'), ('Business students only', 'Business students only'), ('Design students only', 'Design students only'), ('Engineering students only', 'Engineering students only'), ('Science students only', 'Science students only'), ('none', 'none')]
+
     cursor.execute(get_designation)
     for item in cursor.fetchall():
         designation_list.append((item[0], item[0]))
@@ -423,7 +433,42 @@ def add_project_admin():
         html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
     form.designation.choices = designation_list
-    return render_template('admin/add_project_admin.html', title='Add Project', form=form)
+    form.yearRequirement.choices = yearReqList
+    form.majorRequirement.choices = majorReqList
+    form.deptRequirement.choices = deptReqList
+    if form.validate_on_submit():
+        if tnum == 0:
+            flash('Error in the Category field - This field is required.')
+            return redirect(url_for('add_course_admin'))
+        name = form.name.data
+        advisorFName = form.advisorFName.data
+        advisorLName = form.advisorLName.data
+        advisorEmail = form.advisorEmail.data
+        description = form.description.data
+        designation = form.designation.data
+        majorRequirements = form.majorRequirement.data
+        yearRequirements = form.yearRequirement.data
+        deptRequirements = form.deptRequirement.data
+        estNum = form.estNum.data
+
+        # queries
+        check_query = 'SELECT name FROM project WHERE courseNumber=\'{}\''.format(name)
+        result = cursor.execute(check_query)
+        if not result:
+            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            cursor.execute(insert_query)
+            cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES (\'{}\', \'{}\', \'{}\', \'{}\')'.format(name, yearRequirements, deptRequirements, majorRequirements))
+            for c in cat:
+                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES (\'{}\', \'{}\')'.format(name, c)
+                cursor.execute(insert_query_2)
+            conn.commit()
+            flash('Project has been added!')
+            return redirect(url_for('add_project_admin'))
+        else:
+            flash('Conflict with Project Name!')
+    else:
+        flash_errors(form)
+    return render_template('admin/add_project_admin.html', title='Add Project', form=form, category_html=category_html)
 
 
 @app.route('/add-course-admin', methods=['GET', 'POST'])
@@ -467,7 +512,7 @@ def add_course_admin():
         check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber=\'{}\' OR name=\'{}\''.format(cnum, cname)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
+            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents)
             cursor.execute(insert_query)
             for c in cat:
                 insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
@@ -494,6 +539,14 @@ def test():
     tnum = data['nums']
     return ''
 
+cat_result = ''
+@app.route('/test_search', methods=['GET', 'POST'])
+def test_search():
+    data = request.get_json()
+    # print("Data:",data)
+    global cat_result
+    cat_result = data['cat_results']
+    return ''
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

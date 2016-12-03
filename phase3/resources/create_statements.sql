@@ -38,9 +38,12 @@ CREATE TABLE project
 
 CREATE TABLE project_requirements
 (
-    pName           VARCHAR(60) NOT NULL,
-    pRequirement    VARCHAR(60) NOT NULL,
-    PRIMARY KEY (pName, pRequirement),
+    pName               VARCHAR(60) NOT NULL,
+    pYearRequirement    VARCHAR(60) NOT NULL,
+    pDeptRequirement    VARCHAR(60) NOT NULL,
+    pMajorRequirement   VARCHAR(60) NOT NULL,
+
+    PRIMARY KEY (pName, pYearRequirement, pDeptRequirement, pMajorRequirement),
     FOREIGN KEY (pName)         REFERENCES project(name)
 );
 
