@@ -208,8 +208,11 @@ def main_student():
         print(search_query)
         cursor.execute(search_query)
         for item in cursor.fetchall():
-            print(item)
-            table_html += '<tr><td>{}</td><td>{}</td></tr>'.format(item[0],item[1])
+            # print(item)
+            if item[1] == 'Course':
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course=item[0]), item[1])
+            else:
+                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project=item[0]), item[1])
     else:
         flash_errors(form)
 
@@ -289,8 +292,8 @@ def my_application_student():
     return render_template('student/my_application_student.html', title='My Application', table_html=table_html)
 
 
-@app.route('/project-student', methods=['GET', 'POST'])
-def project_student():
+@app.route('/project-student/<project>', methods=['GET', 'POST'])
+def project_student(project):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
@@ -417,8 +420,8 @@ def project_student():
         form=form)
 
 
-@app.route('/course-student', methods=['GET', 'POST'])
-def course_student():
+@app.route('/course-student/<course>', methods=['GET', 'POST'])
+def course_student(course):
     # Check login & role -- DO NOT MODIFY
     if 'username' in session:
         if session.get('role') != 'Student':
