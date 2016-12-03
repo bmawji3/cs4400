@@ -100,9 +100,10 @@ def main_student():
     get_desigs = 'SELECT name FROM designation;'
     desig_list = []
     major_list = []
-    year_list = [('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
+    year_list = [('', ''), ('Freshman', 'Freshman'), ('Sophmore', 'Sophmore'), ('Junior', 'Junior'), ('Senior', 'Senior')]
     category_html = ''
-    # Setting the drop down values
+    table_html = ''
+    # Setting the drop down values and adding default blank at the end of each list
     cursor.execute(get_categories)
     for item in cursor.fetchall():
         html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
@@ -110,25 +111,118 @@ def main_student():
     cursor.execute(get_majors)
     for item in cursor.fetchall():
         major_list.append((item[0], item[0]))
+    major_list.append(('',''))
     cursor.execute(get_desigs)
     for item in cursor.fetchall():
         desig_list.append((item[0], item[0]))
+    desig_list.append(('',''))
     form.designation.choices = desig_list
     form.major.choices = major_list
     form.year.choices = year_list
     # Searching
     if form.validate_on_submit():
         major = form.major.data
+        dept_query = "select deptName from major where majorName = \'{}\'".format(major)
+        cursor.execute(dept_query)
+        if len(major) > 0:
+            dept = cursor.fetchall()[0][0]
+        title = form.title.data
         year = form.year.data
         designation = form.designation.data
         title_search = form.title.data
-        print(cat_result)
-        query = 'SELECT name from project where name = \'%{}%\''.format(title_search)
-        print(query)
+        project_or_course = form.choice.data
+        #Project Query
+        proj_query = ''
+        if project_or_course == 'Project' or project_or_course == 'Both':
+            proj_query = "(select name, 'Project' as type from project p "
+            #Joins
+            if len(cat_result) > 0:
+                proj_query += "join project_category pc on p.name = pc.projectName "
+            if len(major) > 0 or len(year) > 0:
+                proj_query += "join project_requirements pr on pr.pName = p.name "
+            #Conditionals
+            if len(cat_result) > 0 or len(designation) > 0 or len(major) > 0 or len(year) > 0 or len(title) > 0:
+                proj_query += "where "
+                #Category Conditional
+                if len(cat_result) > 0:
+                    proj_query += '('
+                    for i in range(len(cat_result) - 1):
+                        proj_query += 'pc.categoryName = \'{}\' or '.format(cat_result[i])
+                    proj_query += 'pc.categoryName = \'{}\' )'.format(cat_result[len(cat_result)-1])
+                #Designation Conditional
+                if len(designation) > 0:
+                    if len(cat_result) > 0:
+                        proj_query += 'and '
+                    proj_query += 'p.desigName = \'{}\' '.format(designation)
+                #Degree Conditional
+                if len(major) > 0:
+                    if len(designation) > 0 or len(cat_result):
+                        proj_query += 'and '
+                    req_major = ''
+                    req_dept = ''
+                    if major == 'Computer Science':
+                        req_major = 'CS'
+                        req_dept = 'COC'
+                    elif dept == 'College of Design':
+                        req_dept = 'COD'
+                    else:
+                        req_major = major
+                        req_dept = dept
+                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(req_major, req_dept)
+                    proj_query += ' or (pr.pMajorRequirement = \'none\' and pr.pDeptRequirement = \'none\')) '
+                if len(year):
+                    if len(major) > 0 or len(designation) > 0 or len(cat_result):
+                        proj_query += 'and '
+                    proj_query += '(pr.pYearRequirement like \'%{}%\' or pr.pYearRequirement = \'none\') '.format(year)
+                if len(title):
+                    if len(year) > 0 or len(major) > 0 or len(designation) > 0 or len(cat_result):
+                        proj_query += 'and '
+                    proj_query += 'name like \'%{}%\' '.format(title)
+            proj_query += ')'
+        #Course Query
+        course_query = ''
+        if project_or_course == 'Course' or project_or_course == 'Both':
+            course_query += "(select name, 'Course' as type from course c "
+            #Join
+            if len(cat_result) > 0:
+                course_query += "join course_category cc on c.courseNumber = cc.courseNumber "
+            #Conditionals - only if major and year are not specified
+            if len(major) == 0 and len(year) == 0:
+                if len(designation) > 0 or len(cat_result) > 0 or len(title) > 0:
+                    course_query += "where "
+                    #Category Conditional
+                    if len(cat_result) > 0:
+                        course_query += '('
+                        for i in range(len(cat_result) - 1):
+                            course_query += 'cc.categoryName = \'{}\' or '.format(cat_result[i])
+                        course_query += 'cc.categoryName = \'{}\' )'.format(cat_result[len(cat_result)-1])
+                    #Designation Conditional
+                    if len(designation) > 0:
+                        if len(cat_result) > 0:
+                            course_query += 'and '
+                        course_query += 'c.designation = \'{}\' '.format(designation)
+                    if len(title):
+                        if len(designation) > 0:
+                            course_query += 'and '
+                        course_query += 'name like \'%{}%\' '.format(title)
+            course_query += ')'
+        search_query = ''
+        if project_or_course == 'Both':
+            search_query += proj_query + ' union ' + course_query
+        elif project_or_course == 'Project':
+            search_query += proj_query
+        else:
+            search_query += course_query
+        search_query += 'order by name;'
+        print(search_query)
+        cursor.execute(search_query)
+        for item in cursor.fetchall():
+            print(item)
+            table_html += '<tr><td>{}</td><td>{}</td></tr>'.format(item[0],item[1])
     else:
         flash_errors(form)
 
-    return render_template('student/main_student.html', title='Main', form=form, category_html=category_html)
+    return render_template('student/main_student.html', title='Main', form=form, category_html=category_html, table_html=table_html)
 
 
 @app.route('/me-student', methods=['GET', 'POST'])
@@ -405,14 +499,19 @@ def application_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-    displayedStuff = 'SELECT * from applies_for;'
-    cursor.execute(displayedStuff)
-    html = '<p1>Insert table here</p1>'
+    fullTable = 'SELECT * from applies_for;'
+    cursor.execute(fullTable)
+    view_html = ''
+    for row in cursor.fetchall():
+        view_html += '<tr>\n'
+        for field in row:
+            view_html += '\t{}\n'.format(field)
+        view_html += '</tr>\n'
     #for item in cursor.fetchall():
     #    html = '<\n>'
     #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
     #    view_html += html
-    return render_template('admin/application_admin.html', title='View Applications')
+    return render_template('admin/application_admin.html', title='View Applications', view_html = view_html)
 
 
 @app.route('/pop-proj-admin', methods=['GET', 'POST'])

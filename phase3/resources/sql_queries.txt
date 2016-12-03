@@ -1,0 +1,23 @@
+Search/Filter:
+(select name, 'Project' as type
+from project p 
+join project_category pc on p.name = pc.projectName
+join project_requirements pr on pr.pName = p.name 
+where (pc.categoryName = 'sustainable communities' or pc.categoryName = 'collaborative action') 
+    and p.desigName = 'Community'
+    and (
+            (pr.pMajorRequirement like '%CS%' or pr.pDeptRequirement like '%COC%')
+         or (pr.pMajorRequirement = 'none' and pr.pDeptRequirement = 'none')
+         )
+    and (pr.pYearRequirement like '%senior%' or pr.pYearRequirement = 'none')
+    and name like '%wat%'
+)
+union
+(select name, "Course" as type
+from course c
+join course_category cc on c.courseNumber = cc.courseNumber
+where c.designation = 'Community'
+    and cc.categoryName = 'Sustainable Communities'
+    and name like '%wat%'
+)
+order by name;

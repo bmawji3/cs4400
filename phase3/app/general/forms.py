@@ -27,9 +27,9 @@ class EditProfileForm(FlaskForm):
 
 class SearchClassProject(FlaskForm):
     title = StringField('Title')
-    designation = SelectField('Designation')
-    major = SelectField('Major')
-    year = SelectField('Year')
+    designation = SelectField('Designation', default='')
+    major = SelectField('Major', default='')
+    year = SelectField('Year', default='')
     choice = RadioField(default='Both', choices=[('Project','Project'), ('Course','Course'), ('Both','Both')])
 
 class AddProjectForm(FlaskForm):
@@ -42,7 +42,6 @@ class AddProjectForm(FlaskForm):
     majorRequirement = SelectField('Major Requirement')
     yearRequirement = SelectField('Year Requirement')
     deptRequirement = SelectField('Department Requirement')
-
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 
 class ProjectForm(FlaskForm):
