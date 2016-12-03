@@ -281,9 +281,12 @@ def my_application_student():
     else:
         flash('You are not logged in!')
         return redirect(url_for('login'))
-    # Code after this comment
-
-    return render_template('student/my_application_student.html', title='My Application')
+    table_html = ''
+    query = 'SELECT date,projectName,status from applies_for where studentUsername = \'{}\''.format(session.get('username'))
+    cursor.execute(query)
+    for item in cursor.fetchall():
+        table_html += '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(item[0],item[1],item[2])
+    return render_template('student/my_application_student.html', title='My Application', table_html=table_html)
 
 
 @app.route('/project-student', methods=['GET', 'POST'])
