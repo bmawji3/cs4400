@@ -506,11 +506,13 @@ def application_admin():
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
-    view_html += '<tr> <th>Student Name</th> <th></th><th>Project Name</th> <th></th><th>Date</th><th></th> <th>Status</th><th></th></tr>'
+    view_html += '<tr> <th>Student Name</th> <th></th><th>Project Name</th> <th></th><th>Date</th><th></th> <th>Status</th><th></th><th>Accept</th><th></th></tr>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
             view_html += '<td>\t{}<td>\n'.format(field)
+        view_html += '<button name = "Accept" onclick = "">'
+        view_html += '<button name = "Reject" onclick = "">'
         view_html += '</tr>\n'
     view_html += '<table>'
 
