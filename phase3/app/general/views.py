@@ -170,6 +170,7 @@ def edit_student():
     dept = 'N/A'
     # Editing the profile
     if form.validate_on_submit():
+        # check that length of cat_result > 0
         major = form.new_major.data
         year = form.new_year.data
         get_department = 'SELECT deptName from major where majorName = \'{}\''.format(major)
@@ -492,13 +493,13 @@ def test():
     tnum = data['nums']
     return ''
 
-cat_result = 'qwerty'
+cat_result = ''
 @app.route('/test_search', methods=['GET', 'POST'])
 def test_search():
     data = request.get_json()
-    print("Data:",data)
+    # print("Data:",data)
     global cat_result
-    cat_result = data['cat_result']
+    cat_result = data['cat_results']
     return ''
 
 @app.route('/logout', methods=['GET', 'POST'])
