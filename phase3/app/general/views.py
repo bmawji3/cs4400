@@ -360,9 +360,14 @@ def application_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-    displayedStuff = 'SELECT * from applies_for;'
-    cursor.execute(displayedStuff)
-    html = '<p1>Insert table here</p1>'
+    fullTable = 'SELECT * from applies_for;'
+    cursor.execute(fullTable)
+    view_html = ''
+    for row in fullTable:
+        view_html += '<tr>'
+        for field in row:
+            view_html += '<tb>{}</tb>'.format(field[0])
+        view_html += '</tr>'
     #for item in cursor.fetchall():
     #    html = '<\n>'
     #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
