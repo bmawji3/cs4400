@@ -1,5 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>My Application</h1>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Project Name</th>
+            <th>Status</th>
+        </tr>
+        {{ table_html | safe }}
+    </table>
     <button onclick="window.location.href='{{url_for('me_student')}}'">Back</button>
 {% endblock %}
