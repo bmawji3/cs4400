@@ -363,9 +363,11 @@ def application_admin():
     # Code after this comment
     displayedStuff = 'SELECT * from applies_for;'
     cursor.execute(displayedStuff)
-    for item in cursor.fetchall():
-        html = ''#'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
-        category_html += html
+    html = '<p1>Insert table here</p1>'
+    #for item in cursor.fetchall():
+    #    html = '<\n>'
+    #    #'<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
+    #    view_html += html
     return render_template('admin/application_admin.html', title='View Applications')
 
 
@@ -415,6 +417,7 @@ def add_project_admin():
     get_category = 'SELECT name FROM category;'
     designation_list = []
     category_html = ''
+    requirement_list = []
     cursor.execute(get_designation)
     for item in cursor.fetchall():
         designation_list.append((item[0], item[0]))
@@ -422,7 +425,11 @@ def add_project_admin():
     for item in cursor.fetchall():
         html = '<input type="checkbox" name="category" value="{}"> {}<br>\n\t\t\t'.format(item[0], item[0])
         category_html += html
+    cursor.execute('SELECT * from project_requirements;')
+    for item in cursor.fetchall():
+        requirement_list.append(item[0])
     form.designation.choices = designation_list
+    form.requirements.choices = requirement_list
     return render_template('admin/add_project_admin.html', title='Add Project', form=form)
 
 

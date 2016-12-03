@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Add a Project</h1>
-    <h1>Add a Course</h1>
     <form action="" method="post" name="addproject">
         {{ form.hidden_tag() }}
         <p>
@@ -35,10 +34,9 @@
         <p>
             {{ form.advisorEmail.label }}:<br>
             {{ form.advisorEmail(size=40) }}<br>
-        </p>estNum
+        </p>
         <p>
-            {{ form.estNum.label }}:<br>
-            {{ form.estNum(size=40) }}<br>
+            requirements here
         </p>
         <p><input type="submit" value="Submit" onclick="myfunc()"></p>
     </form>
