@@ -616,7 +616,7 @@ def add_project_admin():
     if form.validate_on_submit():
         if tnum == 0:
             flash('Error in the Category field - This field is required.')
-            return redirect(url_for('add_course_admin'))
+            return redirect(url_for('add_project_admin'))
         name = form.name.data
         advisorFName = form.advisorFName.data
         advisorLName = form.advisorLName.data
@@ -629,14 +629,14 @@ def add_project_admin():
         estNum = form.estNum.data
 
         # queries
-        check_query = 'SELECT name FROM project WHERE courseNumber="{}"'.format(name)
+        check_query = 'SELECT name FROM project WHERE name="{}"'.format(name)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES ("{}", "{}", "{}", "{}", "{}", {})'.format(name, estNum, description, advisorFName, advisorLName, designation)
+            insert_query = 'INSERT INTO project (name, estNum, description, advfName, advlName, desigName) VALUES ("{}", "{}", "{}", "{}", "{}", "{}")'.format(name, estNum, description, advisorFName, advisorLName, designation)
             cursor.execute(insert_query)
             cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ("{}", "{}", "{}", "{}")'.format(name, yearRequirements, deptRequirements, majorRequirements))
             for c in cat:
-                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES ("{}", "{}")'.format(name, c)
+                insert_query_2 = 'INSERT INTO project_category (projectName, categoryName) VALUES ("{}", "{}")'.format(name, c)
                 cursor.execute(insert_query_2)
             conn.commit()
             flash('Project has been added!')

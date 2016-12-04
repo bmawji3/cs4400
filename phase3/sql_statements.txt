@@ -104,9 +104,9 @@ SELECT name FROM designation;
 SELECT name FROM category;
 SELECT distinct majorName FROM major;
 SELECT name FROM project WHERE courseNumber='value';
-INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES ('value', 'value', 'value', 'value', 'value', value);
+INSERT INTO project (name, estNum, description, advfName, advlName, designation) VALUES ('value', 'value', 'value', 'value', 'value', 'value');
 INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ('value', 'value', 'value', 'value');
-INSERT INTO project_category (name, categoryName) VALUES ('value', 'value');
+INSERT INTO project_category (projectName, categoryName) VALUES ('value', 'value');
 
 **** Add Course ****
 SELECT * FROM course WHERE courseNumber='CS 4400' OR name='DatabASes';
