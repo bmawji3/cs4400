@@ -642,7 +642,7 @@ def add_project_admin():
     cursor.execute(get_majors)
     majorReqList = []
     for item in cursor.fetchall():
-        majorReqList.append((item[0], item[0]))
+        majorReqList.append((item[0]+' students only', item[0]+' students only'))
     majorReqList.append(('none', 'none'))
     yearReqList = [('Freshman students only', 'Freshman students only'), ('Sophomore students only', 'Sophomore students only'), ('Junior students only', 'Junior students only'), ('Senior students only', 'Senior students only'), ('none', 'none')]
     deptReqList = [('College of Computing students only', 'College of Computing students only'), ('Ivan Allen College of Liberal Arts students only', 'Ivan Allen College of Liberal Arts students only'), ('Scheller School of Business students only', 'Scheller School of Business students only'), ('College of Design students only', 'College of Design students only'), ('College of Engineering students only', 'College of Engineering students only'), ('College of Science students only', 'College of Science students only'), ('none', 'none')]
@@ -677,7 +677,7 @@ def add_project_admin():
         check_query = 'SELECT name FROM project WHERE name="{}"'.format(name)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO project (name, estNum, description, advfName, advlName, desigName) VALUES ("{}", "{}", "{}", "{}", "{}", "{}")'.format(name, estNum, description, advisorFName, advisorLName, designation)
+            insert_query = 'INSERT INTO project (name, estNum, description, advfName, advlName, advEmail, desigName) VALUES ("{}", "{}", "{}", "{}", "{}", "{}", "{}")'.format(name, estNum, description, advisorFName, advisorLName, advisorEmail, designation)
             cursor.execute(insert_query)
             cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ("{}", "{}", "{}", "{}")'.format(name, yearRequirements, deptRequirements, majorRequirements))
             for c in cat:
