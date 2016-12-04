@@ -63,8 +63,12 @@ INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, 
 ADMIN FUNCTIONS:
 
 **** View Applications ****
+SELECT * from applies_for;
+UPDATE applies_for SET status = "rejected" WHERE studentUsername = "value" and projectName = "value";
+UPDATE applies_for SET status = "accepted" WHERE studentUsername = "value" and projectName = "value";
 
 **** View Popular Project Report ****
+SELECT projectName, count(projectName) from applies_for group by projectName;
 
 **** View Application Report ****
 SELECT applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors
@@ -83,7 +87,7 @@ FROM
             (
                 SELECT projectName, status
                 FROM applies_for
-                WHERE status = \'accepted\'
+                WHERE status = 'accepted'
             ) X
         on name = X.projectName
         ) Y
@@ -95,6 +99,13 @@ FROM
 GROUP BY applies_for.projectName;
 
 **** Add Project ****
+SELECT name FROM designation;
+SELECT name FROM category;
+SELECT distinct majorName FROM major;
+SELECT name FROM project WHERE courseNumber='value';
+INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES ('value', 'value', 'value', 'value', 'value', value);
+INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ('value', 'value', 'value', 'value');
+INSERT INTO project_category (name, categoryName) VALUES ('value', 'value');
 
 **** Add Course ****
 SELECT * FROM course WHERE courseNumber='CS 4400' OR name='DatabASes';
