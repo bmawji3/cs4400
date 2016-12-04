@@ -135,88 +135,80 @@ def main_student():
         #Project Query
         proj_query = ''
         if project_or_course == 'Project' or project_or_course == 'Both':
-            proj_query = "(select name, 'Project' as type from project p "
+            proj_query = "(select distinct name, 'Project' as type from project p "
             #Joins
-            if len(cat_result) > 0:
-                proj_query += "join project_category pc on p.name = pc.projectName "
-            if len(major) > 0 or len(year) > 0:
-                proj_query += "join project_requirements pr on pr.pName = p.name "
+            proj_query += "join project_category pc on p.name = pc.projectName "
+            proj_query += "join project_requirements pr on pr.pName = p.name "
             #Conditionals
-            if len(cat_result) > 0 or len(designation) > 0 or len(major) > 0 or len(year) > 0 or len(title) > 0:
-                proj_query += "where "
-                #Category Conditional
-                if len(cat_result) > 0:
-                    proj_query += '('
-                    for i in range(len(cat_result) - 1):
-                        proj_query += 'pc.categoryName = \'{}\' or '.format(cat_result[i])
-                    proj_query += 'pc.categoryName = \'{}\' )'.format(cat_result[len(cat_result)-1])
-                #Designation Conditional
-                if len(designation) > 0:
-                    if len(cat_result) > 0:
-                        proj_query += 'and '
-                    proj_query += 'p.desigName = \'{}\' '.format(designation)
-                #Degree Conditional
-                if len(major) > 0:
-                    if len(designation) > 0 or len(cat_result):
-                        proj_query += 'and '
-                    proj_query += '((pr.pMajorRequirement like \'%{}%\' or pr.pDeptRequirement like \'%{}%\')'.format(major, dept)
-                    proj_query += ' or (pr.pMajorRequirement = \'none\' and pr.pDeptRequirement = \'none\')) '
-                if len(year):
-                    if len(major) > 0 or len(designation) > 0 or len(cat_result):
-                        proj_query += 'and '
-                    proj_query += '(pr.pYearRequirement like \'%{}%\' or pr.pYearRequirement = \'none\') '.format(year)
-                if len(title):
-                    if len(year) > 0 or len(major) > 0 or len(designation) > 0 or len(cat_result):
-                        proj_query += 'and '
-                    proj_query += 'name like \'%{}%\' '.format(title)
+            proj_query += "where "
+            #Category Conditional
+            print(cat_result)
+            proj_query += '('
+            for i in range(len(cat_result) - 1):
+                proj_query += 'pc.categoryName like \'{}%\' or '.format(cat_result[i])
+            if len(cat_result) > 0:
+                proj_query += 'pc.categoryName like \'{}%\' )'.format(cat_result[len(cat_result)-1])
+            else:
+                proj_query += 'pc.categoryName like \'%\' )'
+            #Designation Conditional
+            proj_query += 'and '
+            proj_query += 'p.desigName like \'{}%\' '.format(designation)
+            #Degree Conditional
+            proj_query += 'and '
+            proj_query += '((pr.pMajorRequirement like \'{}%\' or pr.pDeptRequirement like \'{}%\')'.format(major, dept)
+            proj_query += ' or (pr.pMajorRequirement = \'none\' and pr.pDeptRequirement = \'none\')) '
+            proj_query += 'and '
+            proj_query += '(pr.pYearRequirement like \'%{}%\' or pr.pYearRequirement = \'none\') '.format(year)
+            proj_query += 'and '
+            proj_query += 'name like \'%{}%\' '.format(title)
             proj_query += ')'
         #Course Query - only if major and year are not specified
         course_query = ''
         if (project_or_course == 'Course' or project_or_course == 'Both') and (len(major) == 0 and len(year) == 0):
-            course_query += "(select name, 'Course' as type from course c "
+            course_query += "(select distinct name, 'Course' as type from course c "
             #Join
-            if len(cat_result) > 0:
-                course_query += "join course_category cc on c.courseNumber = cc.courseNumber "
+            course_query += "join course_category cc on c.courseNumber = cc.courseNumber "
             #Conditionals
-            if len(designation) > 0 or len(cat_result) > 0 or len(title) > 0:
-                course_query += "where "
-                #Category Conditional
-                if len(cat_result) > 0:
-                    course_query += '('
-                    for i in range(len(cat_result) - 1):
-                        course_query += 'cc.categoryName = \'{}\' or '.format(cat_result[i])
-                    course_query += 'cc.categoryName = \'{}\' )'.format(cat_result[len(cat_result)-1])
-                #Designation Conditional
-                if len(designation) > 0:
-                    if len(cat_result) > 0:
-                        course_query += 'and '
-                    course_query += 'c.designation = \'{}\' '.format(designation)
-                if len(title):
-                    if len(designation) > 0:
-                        course_query += 'and '
-                    course_query += 'name like \'%{}%\' '.format(title)
+            course_query += "where "
+            #Category Conditional
+            course_query += '('
+            for i in range(len(cat_result) - 1):
+                course_query += 'cc.categoryName like \'{}%\' or '.format(cat_result[i])
+            if len(cat_result) > 0:
+                course_query += 'cc.categoryName like \'{}%\' )'.format(cat_result[len(cat_result)-1])
+            else:
+                course_query += 'cc.categoryName like \'%\' )'
+            #Designation Conditional
+            course_query += 'and '
+            course_query += 'c.designation like \'{}%\' '.format(designation)
+            course_query += 'and '
+            course_query += 'name like \'%{}%\' '.format(title)
             course_query += ')'
         search_query = ''
         if project_or_course == 'Both':
             if len(major) > 0 or len(year) > 0:
                 search_query += proj_query
+                search_query += 'order by name;'
             else:
                 search_query += proj_query + ' union ' + course_query
+                search_query += 'order by name;'
         elif project_or_course == 'Project':
             search_query += proj_query
+            search_query += 'order by name;'
         else:
             if len(major) == 0 or len(year) == 0:
                 search_query += course_query
-        search_query += 'order by name;'
+                search_query += 'order by name;'
         print(search_query)
-        cursor.execute(search_query)
-        for item in cursor.fetchall():
-            # print(item)
-            if item[1] == 'Course':
-                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course_name=item[0]), item[1])
-                print(item[0])
-            else:
-                table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project_name=item[0]), item[1])
+        if len(search_query) > 0:
+            cursor.execute(search_query)
+            for item in cursor.fetchall():
+                # print(item)
+                if item[1] == 'Course':
+                    table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course_name=item[0]), item[1])
+                    print(item[0])
+                else:
+                    table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project_name=item[0]), item[1])
     else:
         flash_errors(form)
 
