@@ -554,12 +554,18 @@ def application_report_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
+    view_html = ''
+    smallquery = 'select count(*) from applies_for;'
+    cursor.execute(smallquery)
+    a = cursor.fetchall()[0][0]
+    smallquery2 = 'select count(*) from applies_for where status = "accepted";'
+    cursor.execute(smallquery2)
+    b = cursor.fetchall()[0][0]
+    view_html += ' \n <p>{} applications in total, accepted {} applications</p> \n '.format(a,b)
     fullTable = 'select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = "accepted") X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName order by (final_count*100/count(applies_for.projectName)) desc;'
     #select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = 'accepted') X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName;
     #(select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = 'accepted') X on name = X.projectName) Y group by name) accs
     cursor.execute(fullTable)
-    view_html = ''
     view_html += '<table>'
     view_html += '<tr> <th>Project Name</th> <th># of Applicants</th><th>Acceptance Rate</th> <th>Top 3 Majors</th></tr>'
     for row in cursor.fetchall():
