@@ -22,8 +22,8 @@ class CourseForm(FlaskForm):
     estNum = IntegerField('Estimated # of students', [InputRequired()])
 
 class EditProfileForm(FlaskForm):
-    new_major = SelectField('Major')
-    new_year = SelectField('Year')
+    new_major = SelectField('New Major')
+    new_year = SelectField('New Year')
 
 class SearchClassProject(FlaskForm):
     title = StringField('Title')

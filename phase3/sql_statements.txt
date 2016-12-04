@@ -39,6 +39,9 @@ WHERE c.designation LIKE 'designation%'
 ORDER BY name;
 
 **** Edit Profile ****
+SELECT majorName FROM user where username = username;
+SELECT year FROM user where username = username;
+SELECT deptName FROM user u JOIN major m ON u.majorName=m.majorName where username = username;
 SELECT majorName FROM major ORDER BY majorName;
 SELECT deptName FROM major WHERE majorName = newMajorName;
 UPDATE user SET majorName = newMajorName, year = newYear WHERE username = userName;
