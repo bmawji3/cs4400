@@ -723,6 +723,8 @@ def test_accept():
     agg = data['b']
     values = agg.split("%")
     statement = 'UPDATE applies_for SET status = "accepted" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
+    cursor.execute(statement)
+    conn.commit()
     return redirect(url_for('application_admin'))
 
 cat_result = ''
@@ -732,6 +734,8 @@ def test_reject():
     agg = data['b']
     values = agg.split("%")
     statement = 'UPDATE applies_for SET status = "rejected" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
+    cursor.execute(statement)
+    conn.commit()
     return redirect(url_for('application_admin'))
 
 @app.route('/logout', methods=['GET', 'POST'])
