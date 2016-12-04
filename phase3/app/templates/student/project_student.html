@@ -23,7 +23,7 @@
     </p>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
-        <p><input type="submit" value="Apply"></p>
+        <p><input class="btn btn-primary" type="submit" value="Apply"></p>
     </form>
-    <button onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
+    <button class="btn btn-primary" onclick="window.location.href='{{url_for('main_student')}}'">Back</button>
 {% endblock %}

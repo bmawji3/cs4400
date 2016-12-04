@@ -55,7 +55,7 @@
             {{ form.estNum.label }}:<br>
             {{ form.estNum(size=40) }}<br>
         </p>
-        <p><input type="submit" value="Submit" onclick="myfunc()"></p>
+        <p><input class="btn btn-primary" type="submit" value="Submit" onclick="myfunc()"></p>
     </form>
-    <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
+    <button class="btn btn-primary" onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
 {% endblock %}
