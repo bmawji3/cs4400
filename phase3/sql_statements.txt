@@ -52,6 +52,8 @@ SELECT categoryName FROM project_category WHERE projectName = project_name;
 SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = project_name;
 
 **** Apply Project ****
+SELECT majorName FROM user WHERE username = username;
+SELECT year FROM user WHERE username = username;
 SELECT status FROM applies_for WHERE studentUsername = username AND projectName = project_name;
 SELECT year FROM user WHERE username = username;
 SELECT majorName FROM user WHERE username = username;
@@ -59,6 +61,9 @@ SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptNa
 INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, project_name, "pending");
 
 **** View Course ****
+SELECT courseNumber FROM course WHERE name = course_name;
+SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = course_number;
+SELECT categoryName FROM course_category WHERE courseNumber = course_number;
 
 ADMIN FUNCTIONS:
 

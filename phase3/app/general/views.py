@@ -37,7 +37,7 @@ def login():
     #         # user = User(username, password)
     #         # login_user(user)
         else:
-            flash('DENIED!!')
+            flash('The username and password combination that you entered is invalid. Please try again.')
     else:
         flash_errors(form)
     return render_template('login.html', title='Login', form=form)
@@ -55,19 +55,23 @@ def register():
         check_email = 'SELECT gtEmail FROM user WHERE gtEmail=\'{}\''.format(email)
         check_user = 'SELECT username FROM user WHERE username=\'{}\''.format(username)
         insert_query = 'INSERT INTO user (username, password, gtEmail) VALUES (\'{}\', \'{}\', \'{}\')'.format(username, password, email)
-        loc = email.find('@gatech.edu')
-        if loc == -1:
+        end = email[-11:]
+        start = email[:-11]
+        if end != '@gatech.edu':
             flash('You must have an email address ending in \'@gatech.edu\'')
+            return redirect(url_for('register'))
+        if start.find('@') != -1:
+            flash('That is not a valid email address')
             return redirect(url_for('register'))
         # already checked '@gatech.edu'
         # now checking unique email
         check_em_result = cursor.execute(check_email)
         if not check_em_result:
-            flash('Your email is unique!')
+            # flash('Your email is unique!')
             # now checking unique username
             check_us_result = cursor.execute(check_user)
             if not check_us_result:
-                flash('Your username is unique!')
+                # flash('Your username is unique!')
                 # enter info into db
                 cursor.execute(insert_query)
                 conn.commit()
@@ -348,6 +352,22 @@ def project_student(project_name):
 
     if form.validate_on_submit():
         username = session['username']
+        check_major = 'SELECT majorName FROM user WHERE username = \'{}\';'.format(username)
+        check_year = 'SELECT year FROM user WHERE username = \'{}\';'.format(username)
+    
+        cursor.execute(check_major)
+        res_check = cursor.fetchall()[0][0]
+        # flash(res_check)
+        if res_check is None:
+            flash('You need to set your major and year in the Edit Profile page before you can apply!')
+            return redirect(url_for('project_student', project_name=project_name))
+
+        cursor.execute(check_year)
+        res_check = cursor.fetchall()[0][0]
+        if res_check is None:
+            flash('You need to set your major and year in the Edit Profile page before you can apply!')
+            return redirect(url_for('project-student', project_name=project_name))
+
         query_application = 'SELECT status FROM applies_for WHERE studentUsername = \'{}\' AND projectName = \'{}\';'.format(username, project_name)
         cursor.execute(query_application)
         if cursor.rowcount:
