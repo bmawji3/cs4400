@@ -76,10 +76,10 @@ FROM
     (
         SELECT applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) AS popMajors
         FROM
-        user,applies_for WHERE applies_for.studentUsername = user.username GROUP BYprojectName
+        user,applies_for WHERE applies_for.studentUsername = user.username GROUP BY projectName
     )sub,
     (
-        SELECT name, Sum(cASe when status is NULL then 0 else 1 END) AS final_count
+        SELECT name, Sum(CASE when status is NULL THEN 0 else 1 END) AS final_count
         FROM
         (
             SELECT name, status
