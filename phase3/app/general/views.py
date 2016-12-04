@@ -513,8 +513,8 @@ def application_admin():
             view_html += '<td>\t{}</td>\n'.format(field)
         view_html += '<td>'
         if row[3] == 'pending':
-            view_html += '<button name = "Accept" onclick = "" class = "btn btn-success" id = "{}"> Accept </button> '.format(row[0]+row[1]+"a")
-            view_html += '<button name = "Reject" onclick = "" class = "btn btn-danger" id = "{}"> Reject </button>'.format(row[0]+row[1]+"r")
+            view_html += '<button name = "Accept" onclick = "accept()" class = "btn btn-success" id = "{}"> Accept </button> '.format(row[0].split(" ")[0]+row[1].split(" ")[0]+"a")
+            view_html += '<button name = "Reject" onclick = "reject()" class = "btn btn-danger" id = "{}"> Reject </button>'.format(row[0].split(" ")[0]+row[1].split(" ")[0]+"r")
         view_html += '</td>'
         view_html += '</tr>\n'
     view_html += '<table>'
