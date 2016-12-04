@@ -505,8 +505,8 @@ def application_admin():
             view_html += '<td>\t{}</td>\n'.format(field)
         view_html += '<td>'
         if row[3] == 'pending':
-            view_html += '<button name = "Accept" onclick = "" class = "btn btn-success" id = "{}"> Accept </button> '.format(row[0]+row[1]+"a")
-            view_html += '<button name = "Reject" onclick = "" class = "btn btn-danger" id = "{}"> Reject </button>'.format(row[0]+row[1]+"r")
+            view_html += '<button name = "Accept" onclick = "accept()" class = "btn btn-success" id = "{}"> Accept </button> '.format(row[0].split(" ")[0]+row[1].split(" ")[0]+"a")
+            view_html += '<button name = "Reject" onclick = "reject()" class = "btn btn-danger" id = "{}"> Reject </button>'.format(row[0].split(" ")[0]+row[1].split(" ")[0]+"r")
         view_html += '</td>'
         view_html += '</tr>\n'
     view_html += '<table>'
@@ -552,7 +552,9 @@ def application_report_admin():
         return redirect(url_for('login'))
     # Code after this comment
 
-    fullTable = 'select applies_for.projectName, (count(applies_for.projectName)), (count(status = "accepted")*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName group by applies_for.projectName;'
+    fullTable = 'select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = \'accepted\') X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName;'
+    #select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = 'accepted') X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName;
+    #(select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = 'accepted') X on name = X.projectName) Y group by name) accs
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
