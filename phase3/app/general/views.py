@@ -1,7 +1,7 @@
 from app import app, mysql
 from flask import render_template, redirect, flash, request, url_for, session, g
 from flask_login import login_user, logout_user, current_user, login_required
-from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm, ProjectForm
+from .forms import LoginForm, RegisterForm, CourseForm, EditProfileForm, SearchClassProject, AddProjectForm, ProjectForm, AdminApplicationForm
 from .models import User
 
 conn = mysql.connect()
@@ -23,7 +23,7 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        query = 'SELECT username, userType FROM user WHERE username=\'{}\' AND password=\'{}\''.format(username, password)
+        query = 'SELECT username, userType FROM user WHERE username="{}" AND password="{}"'.format(username, password)
         result = cursor.execute(query)
         if result:
             data = cursor.fetchone()
@@ -514,24 +514,27 @@ def application_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-    fullTable = 'SELECT * from applies_for;'
+    fullTable = 'select projectName, majorName, year, status, studentUsername from applies_for, user where applies_for.studentUsername = user.username;'
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
-    view_html += '<tr> <th>Student Name</th><th>Project Name</th><th>Date</th><th>Status</th><th>Accept</th></tr>'
+    view_html += '<tr> <th>Project Name</th><th>Student Major</th><th>Applicant Year</th><th>Status</th><th>Accept</th></tr>'
     for row in cursor.fetchall():
         view_html += '<tr>\n'
         for field in row:
+            if row[4] == field:
+                break
             view_html += '<td>\t{}</td>\n'.format(field)
         view_html += '<td>'
         if row[3] == 'pending':
-            view_html += '<button name = "Accept" onclick = "accept()" class = "btn btn-success" id = "{}"> Accept </button> '.format(row[0].split(" ")[0]+row[1].split(" ")[0]+"a")
-            view_html += '<button name = "Reject" onclick = "reject()" class = "btn btn-danger" id = "{}"> Reject </button>'.format(row[0].split(" ")[0]+row[1].split(" ")[0]+"r")
+            view_html += '<button name = "Accept" onclick = "accept(this.id)" class = "btn btn-success" id = "{}"> Accept </button> '.format(row[0]+"%"+row[1]+"%"+str(row[2])+"%"+row[3]+"%"+row[4])
+            view_html += '<button name = "Reject" onclick = "reject(this.id)" class = "btn btn-danger" id = "{}"> Reject </button>'.format(row[0]+"%"+row[1]+"%"+str(row[2])+"%"+row[3]+"%"+row[4])
         view_html += '</td>'
         view_html += '</tr>\n'
     view_html += '<table>'
+    form = AdminApplicationForm()
 
-    return render_template('admin/application_admin.html', title='View Applications', view_html = view_html)
+    return render_template('admin/application_admin.html', title='View Applications', view_html = view_html, form=form)
 
 
 @app.route('/pop-proj-admin', methods=['GET', 'POST'])
@@ -545,7 +548,7 @@ def pop_proj_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-    fullTable = 'SELECT projectName, count(projectName) from applies_for group by projectName;'
+    fullTable = 'SELECT projectName, count(projectName) from applies_for group by projectName order by count(projectName) desc limit 10;'
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'
@@ -571,12 +574,18 @@ def application_report_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-
-    fullTable = 'select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = \'accepted\') X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName;'
+    view_html = ''
+    smallquery = 'select count(*) from applies_for;'
+    cursor.execute(smallquery)
+    a = cursor.fetchall()[0][0]
+    smallquery2 = 'select count(*) from applies_for where status = "accepted";'
+    cursor.execute(smallquery2)
+    b = cursor.fetchall()[0][0]
+    view_html += ' \n <p>{} applications in total, accepted {} applications</p> \n '.format(a,b)
+    fullTable = 'select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = "accepted") X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName order by (final_count*100/count(applies_for.projectName)) desc;'
     #select applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors from (select applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) as popMajors from user,applies_for where applies_for.studentUsername = user.username group by projectName)sub, (select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = 'accepted') X on name = X.projectName) Y group by name) accs, applies_for, user where user.username = applies_for.studentUsername and sub.projectName = applies_for.projectName and accs.name = applies_for.projectName group by applies_for.projectName;
     #(select name, Sum(case when status is NULL then 0 else 1 END) as final_count from (select name, status from project left join (select projectName, status from applies_for where status = 'accepted') X on name = X.projectName) Y group by name) accs
     cursor.execute(fullTable)
-    view_html = ''
     view_html += '<table>'
     view_html += '<tr> <th>Project Name</th> <th># of Applicants</th><th>Acceptance Rate</th> <th>Top 3 Majors</th></tr>'
     for row in cursor.fetchall():
@@ -640,14 +649,14 @@ def add_project_admin():
         estNum = form.estNum.data
 
         # queries
-        check_query = 'SELECT name FROM project WHERE courseNumber=\'{}\''.format(name)
+        check_query = 'SELECT name FROM project WHERE courseNumber="{}"'.format(name)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(name, estNum, description, advisorFName, advisorLName, designation)
+            insert_query = 'INSERT INTO project (name, estNum, description, advisorFName, advisorLName, designation) VALUES ("{}", "{}", "{}", "{}", "{}", {})'.format(name, estNum, description, advisorFName, advisorLName, designation)
             cursor.execute(insert_query)
-            cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES (\'{}\', \'{}\', \'{}\', \'{}\')'.format(name, yearRequirements, deptRequirements, majorRequirements))
+            cursor.execute('INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ("{}", "{}", "{}", "{}")'.format(name, yearRequirements, deptRequirements, majorRequirements))
             for c in cat:
-                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES (\'{}\', \'{}\')'.format(name, c)
+                insert_query_2 = 'INSERT INTO project_category (name, categoryName) VALUES ("{}", "{}")'.format(name, c)
                 cursor.execute(insert_query_2)
             conn.commit()
             flash('Project has been added!')
@@ -697,13 +706,13 @@ def add_course_admin():
         designation = form.designation.data
         enum = form.estNum.data
         # queries
-        check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber=\'{}\' OR name=\'{}\''.format(cnum, cname)
+        check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber="{}" OR name="{}"'.format(cnum, cname)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES (\'{}\', \'{}\', \'{}\', \'{}\', \'{}\', {})'.format(courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents)
+            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ("{}", "{}", "{}", "{}", "{}", {})'.format(courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents)
             cursor.execute(insert_query)
             for c in cat:
-                insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES (\'{}\', \'{}\')'.format(cnum, c)
+                insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES ("{}", "{}")'.format(cnum, c)
                 cursor.execute(insert_query_2)
             conn.commit()
             flash('Course has been inserted!')
@@ -735,6 +744,27 @@ def test_search():
     global cat_result
     cat_result = data['cat_results']
     return ''
+
+
+@app.route('/test_accept', methods=['GET', 'POST'])
+def test_accept():
+    data = request.get_json()
+    agg = data['b']
+    values = agg.split("%")
+    statement = 'UPDATE applies_for SET status = "accepted" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[4], values[0])
+    cursor.execute(statement)
+    conn.commit()
+    return redirect(url_for('application_admin'))
+
+@app.route('/test_reject', methods=['GET', 'POST'])
+def test_reject():
+    data = request.get_json()
+    agg = data['b']
+    values = agg.split("%")
+    statement = 'UPDATE applies_for SET status = "rejected" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[4], values[0])
+    cursor.execute(statement)
+    conn.commit()
+    return redirect(url_for('application_admin'))
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

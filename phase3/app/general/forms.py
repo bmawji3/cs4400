@@ -46,3 +46,7 @@ class AddProjectForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     name = StringField('Name')
+
+class AdminApplicationForm(FlaskForm):
+    name = StringField('Name')
+
