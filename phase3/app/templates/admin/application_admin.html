@@ -46,5 +46,5 @@
             {{ view_html | safe}}
         </p>
     </form>
-    <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
+    <a class="btn btn-primary" href="{{url_for('main_admin')}}" >Back</a>
 {% endblock %}
