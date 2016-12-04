@@ -19,21 +19,21 @@ select deptName from major where majorName = selectMajor;
 from project p 
 join project_category pc on p.name = pc.projectName
 join project_requirements pr on pr.pName = p.name 
-where (pc.categoryName = category1 or pc.categoryName = category2) 
-    and p.desigName = designation
+where (pc.categoryName like 'category1%' or pc.categoryName like 'category2%') 
+    and p.desigName like 'designation%'
     and (
-            (pr.pMajorRequirement like '%major%' or pr.pDeptRequirement like '%depatrment%')
+            (pr.pMajorRequirement like 'major%' or pr.pDeptRequirement like 'depatrment%')
          or (pr.pMajorRequirement = 'none' and pr.pDeptRequirement = 'none')
          )
-    and (pr.pYearRequirement like '%class%' or pr.pYearRequirement = 'none')
+    and (pr.pYearRequirement like 'class%' or pr.pYearRequirement = 'none')
     and name like '%input%'
 )
 union
 (select name, "Course" as type
 from course c
 join course_category cc on c.courseNumber = cc.courseNumber
-where c.designation = designation
-    and (cc.categoryName = category1 or cc.categoryName = category2)
+where c.designation like 'designation%'
+    and (cc.categoryName like 'category1%' or cc.categoryName like 'category2%')
     and name like '%input%'
 )
 order by name;
