@@ -526,7 +526,7 @@ def pop_proj_admin():
         flash('You are not logged in!')
         return redirect(url_for('login'))
     # Code after this comment
-    fullTable = 'SELECT projectName, count(projectName) from applies_for group by projectName;'
+    fullTable = 'SELECT projectName, count(projectName) from applies_for group by projectName order by count(projectName) desc;'
     cursor.execute(fullTable)
     view_html = ''
     view_html += '<table>'

@@ -68,7 +68,7 @@ UPDATE applies_for SET status = "rejected" WHERE studentUsername = "value" and p
 UPDATE applies_for SET status = "accepted" WHERE studentUsername = "value" and projectName = "value";
 
 **** View Popular Project Report ****
-SELECT projectName, count(projectName) from applies_for group by projectName;
+SELECT projectName, count(projectName) from applies_for group by projectName order by count(projectName) desc;
 
 **** View Application Report ****
 SELECT applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors
