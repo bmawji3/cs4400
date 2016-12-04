@@ -63,12 +63,12 @@ INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, 
 ADMIN FUNCTIONS:
 
 **** View Applications ****
-SELECT * from applies_for;
+select projectName, majorName, year, status, studentUsername from applies_for, user where applies_for.studentUsername = user.username;
 UPDATE applies_for SET status = "rejected" WHERE studentUsername = "value" and projectName = "value";
 UPDATE applies_for SET status = "accepted" WHERE studentUsername = "value" and projectName = "value";
 
 **** View Popular Project Report ****
-SELECT projectName, count(projectName) from applies_for group by projectName order by count(projectName) desc;
+SELECT projectName, count(projectName) from applies_for group by projectName order by count(projectName) desc limit 10;
 
 **** View Application Report ****
 SELECT applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors
@@ -96,7 +96,8 @@ FROM
     applies_for, user
     WHERE user.username = applies_for.studentUsername
     AND sub.projectName = applies_for.projectName AND accs.name = applies_for.projectName
-GROUP BY applies_for.projectName;
+GROUP BY applies_for.projectName
+ORDER BY (final_count*100/count(applies_for.projectName)) DESC;
 
 **** Add Project ****
 SELECT name FROM designation;
