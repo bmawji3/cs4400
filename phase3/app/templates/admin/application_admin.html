@@ -4,15 +4,23 @@
     <script type = 'text/javascript'>
         function accept(button_id) {
             console.log(button_id);
-            // $("button").click(function() {
-            //     alert(button_id); // or alert($(this).attr('id'));
-            // });
+            $.ajax({
+                url: "{{url_for('test_accept')}}",
+                type: "POST",
+                data: JSON.stringify({b: button_id}),
+                contentType: "application/json; charset=utf-8",
+                success: function(data) { console.log(data); }
+            });
         }
         function reject(button_id) {
             console.log(button_id);
-            // $("button").click(function() {
-            //     alert(button_id); // or alert($(this).attr('id'));
-            // });
+            $.ajax({
+                url: "{{url_for('test_reject')}}",
+                type: "POST",
+                data: JSON.stringify({b: button_id}),
+                contentType: "application/json; charset=utf-8",
+                success: function(data) { console.log(data); }
+            });
         }
     </script>
     <style>

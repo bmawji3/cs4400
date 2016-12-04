@@ -716,6 +716,24 @@ def test_search():
     cat_result = data['cat_results']
     return ''
 
+
+@app.route('/test_accept', methods=['GET', 'POST'])
+def test_accept():
+    data = request.get_json()
+    agg = data['b']
+    values = agg.split("%")
+    statement = 'UPDATE applies_for SET status = "accepted" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
+    return ''
+
+cat_result = ''
+@app.route('/test_reject', methods=['GET', 'POST'])
+def test_reject():
+    data = request.get_json()
+    agg = data['b']
+    values = agg.split("%")
+    statement = 'UPDATE applies_for SET status = "rejected" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
+    return ''
+
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
