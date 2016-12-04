@@ -40,8 +40,11 @@
             background-color: #dddddd;
         }
     </style>
-    <p>
-        {{ view_html | safe}}
-    </p>
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ view_html | safe}}
+        </p>
+    </form>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
 {% endblock %}
