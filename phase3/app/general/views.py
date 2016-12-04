@@ -379,7 +379,7 @@ def project_student(project_name):
         username = session['username']
         check_major = 'SELECT majorName FROM user WHERE username = \'{}\';'.format(username)
         check_year = 'SELECT year FROM user WHERE username = \'{}\';'.format(username)
-    
+
         cursor.execute(check_major)
         res_check = cursor.fetchall()[0][0]
         # flash(res_check)
@@ -734,7 +734,7 @@ def add_course_admin():
         check_query = 'SELECT courseNumber, name FROM course WHERE courseNumber="{}" OR name="{}"'.format(cnum, cname)
         result = cursor.execute(check_query)
         if not result:
-            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ("{}", "{}", "{}", "{}", "{}", {})'.format(courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents)
+            insert_query = 'INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ("{}", "{}", "{}", "{}", "{}", {})'.format(cnum, cname, instructor_f, instructor_l, designation, enum)
             cursor.execute(insert_query)
             for c in cat:
                 insert_query_2 = 'INSERT INTO course_category (courseNumber, categoryName) VALUES ("{}", "{}")'.format(cnum, c)
