@@ -241,6 +241,28 @@ def edit_student():
         return redirect(url_for('login'))
     form = EditProfileForm()
     # Queries to fill drop down
+    curr_major_query = 'SELECT majorName FROM user where username = \'{}\''.format(session.get('username'))
+    curr_year_query = 'SELECT year FROM user where username = \'{}\''.format(session.get('username'))
+    curr_dept_query = 'SELECT deptName FROM user u JOIN major m ON u.majorName=m.majorName where username = \'{}\''.format(session.get('username'))
+
+    cursor.execute(curr_major_query)
+    check_majors = cursor.fetchall()[0][0]
+    if check_majors is None:
+        curr_major = 'N/A'
+    else:
+        curr_major = check_majors
+    cursor.execute(curr_year_query)
+    check_years = cursor.fetchall()[0][0]
+    if check_years is None:
+        curr_year = 'N/A'
+    else:
+        curr_year = check_years
+    cursor.execute(curr_dept_query)
+    if not cursor.rowcount:
+        curr_dept = 'N/A'
+    else:
+        curr_dept = cursor.fetchall()[0][0]
+
     get_majors = 'SELECT majorName FROM major ORDER BY majorName;'
     major_list = []
     dept = ''
@@ -262,12 +284,15 @@ def edit_student():
         dept = cursor.fetchall()[0][0]
         # queries
         update_query = 'UPDATE user SET majorName = \'{}\', year = \'{}\' WHERE username = \'{}\''.format(major, year, session.get('username'))
+        curr_major = major
+        curr_year = year
+        curr_dept = dept
         cursor.execute(update_query)
         conn.commit()
     else:
         flash_errors(form)
 
-    return render_template('student/edit_student.html', title='Edit Profile', form=form, dept=dept)
+    return render_template('student/edit_student.html', title='Edit Profile', form=form, dept=dept, curr_major=curr_major, curr_dept=curr_dept, curr_year=curr_year)
 
 
 @app.route('/my-application-student', methods=['GET', 'POST'])

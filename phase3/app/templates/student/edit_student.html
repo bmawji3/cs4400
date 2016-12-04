@@ -3,19 +3,22 @@
     <h1>Edit Profile</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
+        <br>
         <p>
-            {{ form.new_major.label }}:<br>
+            <b>Current Major:</b> {{curr_major}}<br>
+            {{ form.new_major.label }}:
             {{ form.new_major() }}<br>
         </p>
         <p>
-            {{ form.new_year.label }}:<br>
+            <b>Current Year:</b> {{curr_year}}<br>
+            {{ form.new_year.label }}:
             {{ form.new_year() }}<br>
         </p>
         <p>
-            <b>
-                Department: {{dept}}
-            </b>
+            <b>Current Department:</b> {{curr_dept}}<br>
+            <b>New Department:</b> {{dept}}
         </p>
+        <br>
         <p><input type="submit" value="Submit"></p>
     </form>
     <button onclick="window.location.href='{{url_for('me_student')}}'">Back</button>
