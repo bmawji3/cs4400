@@ -511,18 +511,6 @@ def application_admin():
         view_html += '</tr>\n'
     view_html += '<table>'
 
-    if (len(agga) != 0):
-        values = agga.split("%")
-        statement = 'UPDATE applies_for SET status = "accepted" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
-        cursor.execute(statement)
-        conn.commit()
-        return redirect(url_for('application_admin'))
-    if (len(aggr) != 0):
-        values = aggr.split("%")
-        statement = 'UPDATE applies_for SET status = "rejected" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
-        cursor.execute(statement)
-        conn.commit()
-        return redirect(url_for('application_admin'))
     return render_template('admin/application_admin.html', title='View Applications', view_html = view_html)
 
 
@@ -709,8 +697,6 @@ def add_course_admin():
 
 ################# END ADMIN FUNCTIONS #################
 cat = ''
-agga = []
-aggr = []
 tnum = 0
 @app.route('/test', methods=['GET', 'POST'])
 def test():
@@ -734,15 +720,22 @@ def test_search():
 @app.route('/test_accept', methods=['GET', 'POST'])
 def test_accept():
     data = request.get_json()
-    agga = data['b']
-    return ''
+    agg = data['b']
+    values = agg.split("%")
+    statement = 'UPDATE applies_for SET status = "accepted" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
+    cursor.execute(statement)
+    conn.commit()
+    return redirect(url_for('application_admin'))
 
 @app.route('/test_reject', methods=['GET', 'POST'])
 def test_reject():
     data = request.get_json()
-    aggr = data['b']
-    return ''
-
+    agg = data['b']
+    values = agg.split("%")
+    statement = 'UPDATE applies_for SET status = "rejected" WHERE studentUsername = "{}" and projectName = "{}"'.format(values[0], values[1])
+    cursor.execute(statement)
+    conn.commit()
+    return redirect(url_for('application_admin'))
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
