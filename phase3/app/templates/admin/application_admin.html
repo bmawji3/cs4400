@@ -2,7 +2,26 @@
 {% block content %}
     <h1>Applications</h1>
     <script type = 'text/javascript'>
-
+        function accept(button_id) {
+            console.log(button_id);
+            $.ajax({
+                url: "{{url_for('test_accept')}}",
+                type: "POST",
+                data: JSON.stringify({b: button_id}),
+                contentType: "application/json; charset=utf-8",
+                success: function(data) { console.log(data); }
+            });
+        }
+        function reject(button_id) {
+            console.log(button_id);
+            $.ajax({
+                url: "{{url_for('test_reject')}}",
+                type: "POST",
+                data: JSON.stringify({b: button_id}),
+                contentType: "application/json; charset=utf-8",
+                success: function(data) { console.log(data); }
+            });
+        }
     </script>
     <style>
         table {
@@ -21,8 +40,11 @@
             background-color: #dddddd;
         }
     </style>
-    <p>
-        {{ view_html | safe}}
-    </p>
-    <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ view_html | safe}}
+        </p>
+    </form>
+    <a class="btn btn-primary" href="{{url_for('main_admin')}}" >Back</a>
 {% endblock %}

@@ -55,16 +55,22 @@
             <label for="category">Category</label>:<br>
             {{ category_html | safe }}
         </p>
+        <p>
+            {{ form.estNum.label }}:<br>
+            {{ form.estNum(size=40) }}<br>
+        </p>
+        <p>
             {{ form.majorRequirement.label }}:<br>
             {{ form.majorRequirement() }}<br>
-        <p>
         </p>
+        <p>
             {{ form.yearRequirement.label }}:<br>
             {{ form.yearRequirement() }}<br>
         </p>
+        <p>
             {{ form.deptRequirement.label }}:<br>
             {{ form.deptRequirement() }}<br>
-        <p>
+        </p>
         <p><input type="submit" value="Submit" onclick="myfunc()"></p>
     </form>
     <button onclick="window.location.href='{{url_for('main_admin')}}'">Back</button>

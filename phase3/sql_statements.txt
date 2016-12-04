@@ -1,50 +1,50 @@
 Team 75 SQL Queries
 
 **** Credentials ****
-SELECT * FROM user WHERE username = 'walter' AND password = 'white';
+SELECT username, userType FROM user WHERE username = 'walter' AND pASsword = 'white';
 
 STUDENT FUNCTIONS:
 
 **** Make Account ****
-SELECT * FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
-INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gatech.edu');
+SELECT gtEmail, username FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
+INSERT INTO user (username, pASsword, gtEmail) VALUES ('ASdf', 'ASdf', 'ASdf@gatech.edu');
 
 **** Filter/Search ****
 
 SELECT name FROM category ORDER BY name;
 SELECT majorName FROM major ORDER BY majorName;
 SELECT name FROM designation ORDER BY name;
-select deptName from major where majorName = selectMajor;
-(select name, 'Project' as type
-from project p 
-join project_category pc on p.name = pc.projectName
-join project_requirements pr on pr.pName = p.name 
-where (pc.categoryName like 'category1%' or pc.categoryName like 'category2%') 
-    and p.desigName like 'designation%'
-    and (
-            (pr.pMajorRequirement like 'major%' or pr.pDeptRequirement like 'depatrment%')
-         or (pr.pMajorRequirement = 'none' and pr.pDeptRequirement = 'none')
+SELECT deptName FROM major WHERE majorName = SELECTMajor;
+(SELECT name, 'Project' AS type
+FROM project p
+JOIN project_category pc on p.name = pc.projectName
+JOIN project_requirements pr on pr.pName = p.name
+WHERE (pc.categoryName LIKE 'category1%' or pc.categoryName LIKE 'category2%')
+    AND p.desigName LIKE 'designation%'
+    AND (
+            (pr.pMajorRequirement LIKE 'major%' or pr.pDeptRequirement LIKE 'depatrment%')
+         or (pr.pMajorRequirement = 'none' AND pr.pDeptRequirement = 'none')
          )
-    and (pr.pYearRequirement like 'class%' or pr.pYearRequirement = 'none')
-    and name like '%input%'
+    AND (pr.pYearRequirement LIKE 'clASs%' or pr.pYearRequirement = 'none')
+    AND name LIKE '%input%'
 )
-union
-(select name, "Course" as type
-from course c
-join course_category cc on c.courseNumber = cc.courseNumber
-where c.designation like 'designation%'
-    and (cc.categoryName like 'category1%' or cc.categoryName like 'category2%')
-    and name like '%input%'
+UNION
+(SELECT name, "Course" AS type
+FROM course c
+JOIN course_category cc on c.courseNumber = cc.courseNumber
+WHERE c.designation LIKE 'designation%'
+    AND (cc.categoryName LIKE 'category1%' or cc.categoryName LIKE 'category2%')
+    AND name LIKE '%input%'
 )
-order by name;
+ORDER BY name;
 
 **** Edit Profile ****
 SELECT majorName FROM major ORDER BY majorName;
-SELECT deptName from major where majorName = newMajorName;
+SELECT deptName FROM major WHERE majorName = newMajorName;
 UPDATE user SET majorName = newMajorName, year = newYear WHERE username = userName;
 
 **** View Applications ****
-SELECT date,projectName,status from applies_for where studentUsername = userName;
+SELECT date,projectName,status FROM applies_for WHERE studentUsername = userName;
 
 **** View Project ****
 SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name = project_name;
@@ -52,6 +52,8 @@ SELECT categoryName FROM project_category WHERE projectName = project_name;
 SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = project_name;
 
 **** Apply Project ****
+SELECT majorName FROM user WHERE username = username;
+SELECT year FROM user WHERE username = username;
 SELECT status FROM applies_for WHERE studentUsername = username AND projectName = project_name;
 SELECT year FROM user WHERE username = username;
 SELECT majorName FROM user WHERE username = username;
@@ -59,19 +61,60 @@ SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptNa
 INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, project_name, "pending");
 
 **** View Course ****
+SELECT courseNumber FROM course WHERE name = course_name;
+SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = course_number;
+SELECT categoryName FROM course_category WHERE courseNumber = course_number;
 
 ADMIN FUNCTIONS:
 
 **** View Applications ****
+select projectName, majorName, year, status, studentUsername from applies_for, user where applies_for.studentUsername = user.username;
+UPDATE applies_for SET status = "rejected" WHERE studentUsername = "value" and projectName = "value";
+UPDATE applies_for SET status = "accepted" WHERE studentUsername = "value" and projectName = "value";
 
 **** View Popular Project Report ****
+SELECT projectName, count(projectName) from applies_for group by projectName order by count(projectName) desc limit 10;
 
 **** View Application Report ****
+SELECT applies_for.projectName, (count(applies_for.projectName)), (final_count*100/count(applies_for.projectName)), popMajors
+FROM
+    (
+        SELECT applies_for.projectName, substring_index(group_concat(majorName separator "/"), "/", 3) AS popMajors
+        FROM
+        user,applies_for WHERE applies_for.studentUsername = user.username GROUP BY projectName
+    )sub,
+    (
+        SELECT name, Sum(CASE when status is NULL THEN 0 else 1 END) AS final_count
+        FROM
+        (
+            SELECT name, status
+            FROM project left JOIN
+            (
+                SELECT projectName, status
+                FROM applies_for
+                WHERE status = 'accepted'
+            ) X
+        on name = X.projectName
+        ) Y
+        GROUP BY name
+    ) accs,
+    applies_for, user
+    WHERE user.username = applies_for.studentUsername
+    AND sub.projectName = applies_for.projectName AND accs.name = applies_for.projectName
+GROUP BY applies_for.projectName
+ORDER BY (final_count*100/count(applies_for.projectName)) DESC;
 
 **** Add Project ****
+SELECT name FROM designation;
+SELECT name FROM category;
+SELECT distinct majorName FROM major;
+SELECT name FROM project WHERE courseNumber='value';
+INSERT INTO project (name, estNum, description, advfName, advlName, designation) VALUES ('value', 'value', 'value', 'value', 'value', 'value');
+INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ('value', 'value', 'value', 'value');
+INSERT INTO project_category (projectName, categoryName) VALUES ('value', 'value');
 
 **** Add Course ****
-SELECT * FROM course WHERE courseNumber='CS 4400' OR name='Databases';
+SELECT * FROM course WHERE courseNumber='CS 4400' OR name='DatabASes';
 INSERT INTO course (courseNumber, name, instructorfName, instructorlName, designation, estNumberStudents) VALUES ('qqq 111', 'qqq - the real qqq', 'Q', 'QQ', 'Community', 432);
 INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'computing for good');
 INSERT INTO course_category (courseNumber, categoryName) VALUES ('qqq 111', 'urban development');
