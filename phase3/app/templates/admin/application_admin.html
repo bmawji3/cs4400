@@ -3,10 +3,14 @@
     <h1>Applications</h1>
     <script type = 'text/javascript'>
         function accept() {
-
+            $("button").click(function() {
+                alert(this.id); // or alert($(this).attr('id'));
+            });
         }
         function reject() {
-
+            $("button").click(function() {
+                alert(this.id); // or alert($(this).attr('id'));
+            });
         }
     </script>
     <style>

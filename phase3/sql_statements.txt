@@ -1,12 +1,12 @@
 Team 75 SQL Queries
 
 **** Credentials ****
-SELECT * FROM user WHERE username = 'walter' AND password = 'white';
+SELECT username, userType FROM user WHERE username = 'walter' AND password = 'white';
 
 STUDENT FUNCTIONS:
 
 **** Make Account ****
-SELECT * FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
+SELECT gtEmail, username FROM user WHERE gtEmail = 'ww@gatech.edu' OR username = 'walter';
 INSERT INTO user (username, password, gtEmail) VALUES ('asdf', 'asdf', 'asdf@gatech.edu');
 
 **** Filter/Search ****
@@ -16,10 +16,10 @@ SELECT majorName FROM major ORDER BY majorName;
 SELECT name FROM designation ORDER BY name;
 select deptName from major where majorName = selectMajor;
 (select name, 'Project' as type
-from project p 
+from project p
 join project_category pc on p.name = pc.projectName
-join project_requirements pr on pr.pName = p.name 
-where (pc.categoryName like 'category1%' or pc.categoryName like 'category2%') 
+join project_requirements pr on pr.pName = p.name
+where (pc.categoryName like 'category1%' or pc.categoryName like 'category2%')
     and p.desigName like 'designation%'
     and (
             (pr.pMajorRequirement like 'major%' or pr.pDeptRequirement like 'depatrment%')
