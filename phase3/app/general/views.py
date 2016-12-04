@@ -209,10 +209,10 @@ def main_student():
             for item in cursor.fetchall():
                 # print(item)
                 if item[1] == 'Course':
-                    table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course_name=item[0]), item[1])
+                    table_html += '<tr><td>{}</td><td><a class="btn btn-default" href="{}">View Course</a></td><td>{}</td></tr>'.format(item[0], url_for('course_student', course_name=item[0]), item[1])
                     print(item[0])
                 else:
-                    table_html += '<tr><td>{} <a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project_name=item[0]), item[1])
+                    table_html += '<tr><td>{}</td><td><a class="btn btn-default" href="{}">View/Apply Project</a></td><td>{}</td></tr>'.format(item[0], url_for('project_student', project_name=item[0]), item[1])
     else:
         flash_errors(form)
 
@@ -761,6 +761,7 @@ def test():
     tnum = data['nums']
     return ''
 
+
 cat_result = ''
 @app.route('/test_search', methods=['GET', 'POST'])
 def test_search():
@@ -781,6 +782,7 @@ def test_accept():
     conn.commit()
     return redirect(url_for('application_admin'))
 
+
 @app.route('/test_reject', methods=['GET', 'POST'])
 def test_reject():
     data = request.get_json()
@@ -790,6 +792,7 @@ def test_reject():
     cursor.execute(statement)
     conn.commit()
     return redirect(url_for('application_admin'))
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

@@ -38,7 +38,8 @@
         }
     </style>
     <h1>Main Page</h1>
-    <a href="{{url_for('me_student')}}">Me</a><br>
+    <p><b>Me</b>:</p>
+    <a href="{{url_for('me_student')}}"><img src="{{ url_for('static', filename='pictures/gt_buzz_logo.gif') }}" style="width:304px;height:228px;"></a><br>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
         <p>
@@ -69,6 +70,7 @@
     <table>
         <tr>
             <th>Name</th>
+            <th>View</th>
             <th>Type</th>
         </tr>
         {{ table_html | safe }}
