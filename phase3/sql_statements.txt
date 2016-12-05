@@ -22,7 +22,7 @@ JOIN project_requirements pr on pr.pName = p.name
 WHERE (pc.categoryName LIKE 'category1%' or pc.categoryName LIKE 'category2%')
     AND p.desigName LIKE 'designation%'
     AND (
-            (pr.pMajorRequirement LIKE 'major%' or pr.pDeptRequirement LIKE 'depatrment%')
+            (pr.pMajorRequirement LIKE 'major%' or pr.pDeptRequirement LIKE 'department%')
          or (pr.pMajorRequirement = 'none' AND pr.pDeptRequirement = 'none')
          )
     AND (pr.pYearRequirement LIKE 'clASs%' or pr.pYearRequirement = 'none')
