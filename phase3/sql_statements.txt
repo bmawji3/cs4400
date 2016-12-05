@@ -1,7 +1,7 @@
 Team 75 SQL Queries
 
 **** Credentials ****
-SELECT username, userType FROM user WHERE username = 'walter' AND pASsword = 'white';
+SELECT username, userType FROM user WHERE username = 'walter' AND password = 'white';
 
 STUDENT FUNCTIONS:
 
@@ -14,7 +14,7 @@ INSERT INTO user (username, pASsword, gtEmail) VALUES ('ASdf', 'ASdf', 'ASdf@gat
 SELECT name FROM category ORDER BY name;
 SELECT majorName FROM major ORDER BY majorName;
 SELECT name FROM designation ORDER BY name;
-SELECT deptName FROM major WHERE majorName = SELECTMajor;
+SELECT deptName FROM major WHERE majorName = 'SELECTMajor';
 (SELECT name, 'Project' AS type
 FROM project p
 JOIN project_category pc on p.name = pc.projectName
@@ -43,30 +43,30 @@ SELECT majorName FROM user where username = username;
 SELECT year FROM user where username = username;
 SELECT deptName FROM user u JOIN major m ON u.majorName=m.majorName where username = username;
 SELECT majorName FROM major ORDER BY majorName;
-SELECT deptName FROM major WHERE majorName = newMajorName;
-UPDATE user SET majorName = newMajorName, year = newYear WHERE username = userName;
+SELECT deptName FROM major WHERE majorName = 'newMajorName';
+UPDATE user SET majorName = 'newMajorName', year = 'newYear' WHERE username = 'userName';
 
 **** View Applications ****
-SELECT date,projectName,status FROM applies_for WHERE studentUsername = userName;
+SELECT date,projectName,status FROM applies_for WHERE studentUsername = 'userName';
 
 **** View Project ****
-SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name = project_name;
-SELECT categoryName FROM project_category WHERE projectName = project_name;
-SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = project_name;
+SELECT estNum, description, advfName, advlName, advEmail, desigName FROM project WHERE name = 'project_name';
+SELECT categoryName FROM project_category WHERE projectName = 'project_name';
+SELECT pYearRequirement, pDeptRequirement, pMajorRequirement FROM project_requirements WHERE pName = 'project_name';
 
 **** Apply Project ****
-SELECT majorName FROM user WHERE username = username;
-SELECT year FROM user WHERE username = username;
-SELECT status FROM applies_for WHERE studentUsername = username AND projectName = project_name;
-SELECT year FROM user WHERE username = username;
-SELECT majorName FROM user WHERE username = username;
+SELECT majorName FROM user WHERE username = 'username';
+SELECT year FROM user WHERE username = 'username';
+SELECT status FROM applies_for WHERE studentUsername = 'username' AND projectName = 'project_name';
+SELECT year FROM user WHERE username = 'username';
+SELECT majorName FROM user WHERE username = 'username';
 SELECT deptName FROM (SELECT user.username AS username, major.deptName AS deptName FROM user INNER JOIN major ON user.majorName = major.majorName) X WHERE username = username;
-INSERT INTO applies_for(studentUsername, projectName, status) VALUES (username, project_name, "pending");
+INSERT INTO applies_for(studentUsername, projectName, status) VALUES ('username', 'project_name', "pending");
 
 **** View Course ****
-SELECT courseNumber FROM course WHERE name = course_name;
-SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = course_number;
-SELECT categoryName FROM course_category WHERE courseNumber = course_number;
+SELECT courseNumber FROM course WHERE name = 'course_name';
+SELECT name, instructorfName, instructorlName, designation, estNumberStudents FROM course WHERE courseNumber = 'course_number';
+SELECT categoryName FROM course_category WHERE courseNumber = 'course_number';
 
 ADMIN FUNCTIONS:
 
@@ -111,8 +111,8 @@ ORDER BY (final_count*100/count(applies_for.projectName)) DESC;
 SELECT name FROM designation;
 SELECT name FROM category;
 SELECT distinct majorName FROM major;
-SELECT name FROM project WHERE courseNumber='value';
-INSERT INTO project (name, estNum, description, advfName, advlName, designation) VALUES ('value', 'value', 'value', 'value', 'value', 'value');
+SELECT name FROM project WHERE name='value';
+INSERT INTO project (name, estNum, description, advfName, advlName, advEmail, desigName) VALUES ('value', 42, 'value', 'value', 'value', 'value', 'value');
 INSERT INTO project_requirements (pName, pYearRequirement, pDeptRequirement, pMajorRequirement) VALUES ('value', 'value', 'value', 'value');
 INSERT INTO project_category (projectName, categoryName) VALUES ('value', 'value');
 
